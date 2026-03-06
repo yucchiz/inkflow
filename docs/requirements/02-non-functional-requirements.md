@@ -119,7 +119,7 @@
 
 | 項目 | 仕様 |
 |------|------|
-| メインストレージ | IndexedDB（Dexie.js経由） |
+| メインストレージ | IndexedDB（`idb`経由） |
 | 設定ストレージ | localStorage（テーマ設定等の軽量データ） |
 | オフライン対応 | 完全オフラインで動作（ネットワーク依存なし） |
 | クラウド同期 | なし（MVP） |
@@ -180,8 +180,8 @@
 |------|------|
 | フレームワーク | React 19 + Vite |
 | 言語 | TypeScript（strict mode） |
-| 状態管理 | Zustand |
-| ストレージ | IndexedDB（Dexie.js） + localStorage |
+| 状態管理 | React Context + useReducer |
+| ストレージ | IndexedDB（`idb`） + localStorage |
 | スタイリング | Tailwind CSS |
 | PWA | vite-plugin-pwa（Workbox） |
 | フォント | Google Fonts（Noto Serif JP 等） |
