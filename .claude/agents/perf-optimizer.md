@@ -1,6 +1,6 @@
 ---
 name: perf-optimizer
-description: パフォーマンスの分析と最適化を行うエージェント。バンドルサイズ、不要な再レンダリング、アニメーション効率を検証し、CLAUDE.mdのパフォーマンス基準への適合を改善する。
+description: パフォーマンスの分析と最適化を行うエージェント。バンドルサイズ、不要な再レンダリング、アニメーション効率を検証し、docs/architecture.mdのパフォーマンス基準への適合を改善する。
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
@@ -8,7 +8,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 
 アプリケーションのパフォーマンスを分析し、最適化する。
 
-## パフォーマンス基準（CLAUDE.md より）
+## パフォーマンス基準（docs/architecture.md より）
 - バンドルサイズ: gzip後 200KB 以下
 - 初回ロード: 3秒以内（3G想定）
 - LCP < 2.5s / FID < 100ms / CLS < 0.1

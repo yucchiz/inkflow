@@ -13,7 +13,7 @@ tools: Read, Glob, Grep, Bash(git diff:*), Bash(git diff --staged:*), Bash(git l
 ### 1. 変更差分の把握
 - `git diff` または `git diff --staged` で変更内容を確認する
 - 変更されたファイルを読み込み、変更の全体像を把握する
-- 関連する仕様書（`docs/requirements/`）を参照し、変更の目的を理解する
+- 関連する仕様（`docs/PRD.md`）を参照し、変更の目的を理解する
 
 ### 2. 良い点を褒める
 - 変更の中で良いプラクティスを見つけ、**具体的に**褒める:

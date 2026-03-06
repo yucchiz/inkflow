@@ -13,7 +13,7 @@ arguments:
 
 ## 手順
 
-1. **仕様確認**: `docs/requirements/03-screen-specifications.md` を読み込み、`$ARGUMENTS` に関連する仕様を確認する
+1. **仕様確認**: `docs/PRD.md` のセクション3（画面仕様）を読み込み、`$ARGUMENTS` に関連する仕様を確認する
 
 2. **配置先決定**: コンポーネント名から適切なディレクトリを判断する:
    - エディタ関連 → `src/components/editor/`

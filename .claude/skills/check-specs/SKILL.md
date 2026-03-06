@@ -17,12 +17,12 @@ allowed-tools:
 
 1. **変更差分の取得**: `git diff` でステージング済み＋未ステージングの変更を取得する
 
-2. **関連仕様書の特定**: 変更されたファイルの内容に基づき、`docs/requirements/` から関連する仕様書を読み込む:
-   - `01-functional-requirements.md` — 機能要件
-   - `02-non-functional-requirements.md` — 非機能要件
-   - `03-screen-specifications.md` — 画面仕様
-   - `04-data-specifications.md` — データ仕様
-   - `05-animation-specifications.md` — アニメーション仕様
+2. **関連仕様の特定**: 変更されたファイルの内容に基づき、`docs/PRD.md` から関連するセクションを読み込む:
+   - セクション1 — 機能要件
+   - セクション2 — 非機能要件
+   - セクション3 — 画面仕様
+   - セクション4 — データ仕様
+   - セクション5 — アニメーション仕様
 
 3. **検証**: 以下の観点でチェックする:
    - 機能が仕様通りに実装されているか
