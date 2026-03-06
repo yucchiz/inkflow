@@ -133,9 +133,4 @@ interface Document {
 
 ## 要件ドキュメント
 
-詳細な仕様は `docs/requirements/` を参照:
-- `01-functional-requirements.md` — 機能要件
-- `02-non-functional-requirements.md` — 非機能要件
-- `03-screen-specifications.md` — 画面仕様
-- `04-data-specifications.md` — データ仕様
-- `05-animation-specifications.md` — アニメーション仕様
+詳細な仕様は `PRD.md` を参照（機能要件/非機能要件/画面仕様/データ仕様/アニメーション仕様を統合）。
