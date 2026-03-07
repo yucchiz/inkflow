@@ -11,6 +11,8 @@
 | ストレージ | IndexedDB (`idb`) + localStorage | — |
 | PWA | vite-plugin-pwa (Workbox) | — |
 | ルーティング | React Router | v7 |
+| フォント | Noto Serif JP（本文）+ Noto Sans JP（見出し・UI） | Google Fonts |
+| アイコン | Heroicons | v2 |
 | テスト | Vitest + Testing Library | — |
 | コード品質 | ESLint + Prettier | — |
 

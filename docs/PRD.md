@@ -1,5 +1,33 @@
 # InkFlow PRD
 
+## 0. ターゲットユーザー
+
+### ペルソナA: 日常執筆者
+
+- **年齢**: 28歳
+- **端末**: スマートフォン中心（通勤中、カフェ、就寝前）
+- **執筆内容**: 日記・エッセイ・思いつきのメモ
+- **動機**: 思い浮かんだことをすぐに書き留めたい
+- **重視すること**: シンプルさ、起動の速さ、余計な機能がないこと
+- **InkFlowに求めるもの**: 開いて、書いて、閉じる。それだけの心地よさ
+
+### ペルソナB: 集中執筆者
+
+- **年齢**: 35歳
+- **端末**: デスクトップPC中心（自宅の書斎、週末の長時間執筆）
+- **執筆内容**: ブログ記事・短編小説・評論
+- **動機**: 通知もボタンもない、文章だけの空間がほしい
+- **重視すること**: 没入感、タイポグラフィの美しさ、集中モード
+- **InkFlowに求めるもの**: 墨と余白だけの静かな執筆環境
+
+### 対象外
+
+- **Markdownが必須** → Obsidian / Typora
+- **チーム共有・コラボレーション** → Notion / Google Docs
+- **リッチテキスト編集** → Word / Pages
+
+---
+
 ## 1. 機能要件
 
 ### 1.1 ドキュメント管理
@@ -73,7 +101,23 @@
 | タイトルフォントサイズ | 22px | 28px |
 | 行間 | 1.8 | 2.0 |
 | エディタ最大幅 | 100%（左右padding: 16px） | 680px（中央寄せ） |
-| フォント | 日本語に最適化（Noto Serif JP / BIZ UDGothic 等、要検討） |
+| フォント | 下記「フォント指定」参照 |
+
+**フォント指定**:
+
+| 用途 | フォント | ウェイト | letter-spacing |
+|------|---------|---------|----------------|
+| 本文 | Noto Serif JP | 400 | 0.02em |
+| タイトル | Noto Sans JP | 700 | 0.04em |
+| UI要素 | Noto Sans JP | 400 | 0.02em |
+
+```css
+--font-body: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+--font-heading: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+--font-ui: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+```
+
+Google Fonts CDN で読み込み。`display=swap` 指定。使用ウェイトのみ（400, 700）をロードする。
 
 #### 集中モード
 
@@ -439,7 +483,7 @@ interface ThemeState {
 
 | 方針 | 詳細 |
 |------|------|
-| パフォーマンス | `transform` と `opacity` のみアニメーション |
+| パフォーマンス | `transform` と `opacity` のみアニメーション。**例外**: テーマ切替時の `background-color`, `color`, `border-color` トランジションは対象外（色変化のみでレイアウトシフトなし） |
 | アクセシビリティ | `prefers-reduced-motion: reduce` でアニメーション無効化 |
 | 実装 | CSS Transitions / Animations。MVPでは `framer-motion` 不要 |
 
@@ -467,7 +511,7 @@ interface ThemeState {
 |--------------|------|--------------|----------|--------|
 | 画面遷移 | 一覧→エディタ | フェードイン（opacity 0→1） | 200ms | ease-out |
 | 画面遷移 | エディタ→一覧 | フェードアウト（opacity 1→0） | 150ms | ease-in |
-| カードリスト | 初回表示 | フェードイン + スライドアップ（translateY 12px→0）。遅延: 50ms*index（最大10件） | 300ms | ease-out |
+| カードリスト | 初回表示 | フェードイン + スライドアップ（translateY 12px→0）。遅延: 50ms * min(index, 10)。11件目以降は遅延なしで即座に表示 | 300ms | ease-out |
 | カード | ホバー | 背景色変化 | 200ms | ease-in-out |
 | カード | ホバー時削除ボタン | opacity 0→1 | 150ms | — |
 | FAB | 初回表示 | スケールイン（scale 0→1） | 300ms | ease-out |

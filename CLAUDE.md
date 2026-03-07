@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # InkFlow
 
 ## プロジェクト概要
@@ -23,6 +27,7 @@
 |------|------|
 | `docs/PRD.md` | 機能要件・画面仕様・データ仕様・アニメーション仕様 |
 | `docs/architecture.md` | テックスタック・構造・設計判断・データモデル・パフォーマンス基準 |
+| `docs/design-language.md` | デザイン哲学・カラーパレット・タイポグラフィ・アイコン・トーン＆マナー |
 | `.claude/` | rules（自動適用規約）、agents、skills |
 | `src/` | アプリケーションコード（未作成） |
 
@@ -37,7 +42,20 @@ npm run preview    # ビルド結果のプレビュー
 npm run test       # テスト実行
 npm run lint       # ESLint実行
 npm run format     # Prettier実行
+npm run test -- --run --testPathPattern="ファイル名"  # 単一テスト実行
 ```
+
+## 自動フック（`.claude/settings.json`）
+
+- **コミット前**: `npm run lint && npm run format -- --check && npm run test -- --run` が自動実行される。全て通らないとコミットできない
+- **`src/**/*.ts*` 編集後**: `npx tsc --noEmit` が自動実行され、型エラーがあれば即座にフィードバックされる
+
+## 自動適用ルール（`.claude/rules/`）
+
+ファイル種別に応じて以下のルールが自動適用される:
+- `react-components.md` — コンポーネント定義・アクセシビリティ・スタイリング規約
+- `testing.md` — Testing Library のクエリ優先順位・テスト設計・モック方針
+- `data-layer.md` — IndexedDB操作・状態管理・エラーハンドリングパターン
 
 ## 命名規則
 
