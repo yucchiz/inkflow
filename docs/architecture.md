@@ -51,6 +51,8 @@ src/
 
 ## データモデル
 
+> 注: データモデルは `docs/PRD.md` 4.1 にも記載あり（意図的な重複）。変更時は両方を更新すること。
+
 ```typescript
 interface Document {
   id: string;        // UUID v4 (crypto.randomUUID())
