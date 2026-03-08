@@ -8,7 +8,17 @@
       "Bash(npm run test:*)",
       "Bash(npm run preview:*)",
       "Bash(npx:*)",
-      "Read(*)"
+      "Bash(git diff:*)",
+      "Bash(git diff --staged:*)",
+      "Bash(git diff --cached:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git status:*)",
+      "Bash(git stash:*)",
+      "Bash(git checkout -- src/:*)",
+      "Read(*)",
+      "Write(src/**)",
+      "Edit(src/**)"
     ]
   },
   "hooks": {
