@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import { IDBFactory } from 'fake-indexeddb';
 
 import { documentRepository, resetDB } from '@/lib/db';
-import { createDocument } from '@/types/document';
+import { createDocument } from '@/lib/document';
 
 beforeEach(() => {
   resetDB();

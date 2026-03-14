@@ -42,12 +42,13 @@ npm run preview    # ビルド結果のプレビュー
 npm run test       # テスト実行
 npm run lint       # ESLint実行
 npm run format     # Prettier実行
+npm run format:check  # フォーマットチェック（修正なし）
 npm run test -- --run --testPathPattern="ファイル名"  # 単一テスト実行
 ```
 
 ## 自動フック（`.claude/settings.json`）
 
-- **コミット前**: `npm run lint && npm run format -- --check && npm run test -- --run` が自動実行される。全て通らないとコミットできない
+- **コミット前**: `npm run lint && npm run format:check && npm run test -- --run` が自動実行される。全て通らないとコミットできない
 - **`src/**/_.ts_`編集後**:`npx tsc --noEmit` が自動実行され、型エラーがあれば即座にフィードバックされる
 
 ## 自動適用ルール（`.claude/rules/`）

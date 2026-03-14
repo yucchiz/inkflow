@@ -29,15 +29,3 @@ export type DocumentAction =
   | { type: 'ADD_DOCUMENT'; payload: Document }
   | { type: 'UPDATE_DOCUMENT'; payload: Document }
   | { type: 'DELETE_DOCUMENT'; payload: { id: string } };
-
-export function createDocument(overrides?: Partial<Document>): Document {
-  const now = new Date().toISOString();
-  return {
-    id: crypto.randomUUID(),
-    title: '',
-    body: '',
-    createdAt: now,
-    updatedAt: now,
-    ...overrides,
-  };
-}
