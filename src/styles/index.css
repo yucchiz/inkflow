@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-body: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-heading: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-ui: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+
+  --color-bg: #f3f4f6;
+  --color-bg-sub: #ffffff;
+  --color-text: #1f2937;
+  --color-text-sub: #6b7280;
+  --color-border: #e5e7eb;
+  --color-accent: #1e40af;
+  --color-accent-hover: #1e3a8a;
+  --color-danger: #dc2626;
+}
+
+:root {
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.dark {
+  --color-bg: #111827;
+  --color-bg-sub: #1f2937;
+  --color-text: #f3f4f6;
+  --color-text-sub: #9ca3af;
+  --color-border: #374151;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-danger: #ef4444;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+}

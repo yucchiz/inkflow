@@ -11,52 +11,61 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 ## ワークフロー
 
 ### 1. 対象スキャン
+
 - 指定されたファイル、またはプロジェクト全体の `src/components/**/*.tsx` と `src/pages/**/*.tsx` をスキャンする
 - 各コンポーネントの HTML 構造を分析する
 
 ### 2. 監査チェックリスト
 
 #### セマンティック HTML
+
 - `<div>` / `<span>` の不適切な使用がないか
 - 適切な要素の使用: `<main>`, `<nav>`, `<section>`, `<article>`, `<header>`, `<footer>`, `<button>`, `<a>`
 - 見出しレベル（`<h1>`〜`<h6>`）の階層が正しいか
 - リスト要素（`<ul>`, `<ol>`, `<li>`）の適切な使用
 
 #### aria 属性
+
 - インタラクティブ要素に適切な `aria-label` / `aria-labelledby` があるか
 - 状態を持つ要素に `aria-expanded`, `aria-selected`, `aria-checked` 等があるか
 - ライブリージョン（`aria-live`）の適切な使用
 - `role` 属性の適切な付与（ネイティブ要素で代替できる場合はネイティブ要素を優先）
 
 #### キーボード操作
+
 - 全てのインタラクティブ要素が `Tab` キーで到達可能か
 - `Enter` / `Space` での操作が可能か
 - `Escape` でモーダル/ドロップダウンが閉じるか
 - フォーカストラップ（モーダル内でのフォーカス循環）が実装されているか
 
 #### フォーカス管理
+
 - フォーカスの可視性（`focus-visible` スタイル）
 - ページ遷移時のフォーカス移動
 - 動的コンテンツ追加/削除時のフォーカス管理
 
 #### モーション
+
 - `prefers-reduced-motion: reduce` への対応
 - Tailwind の `motion-safe:` / `motion-reduce:` バリアントの使用
 - アニメーションが `transform` + `opacity` のみか
 
 ### 3. 修正
+
 - 検出した問題を重要度（Critical / Warning / Info）で分類
 - Critical と Warning の問題は修正を実施する
 - 修正後に `npm run test` でテストが壊れていないことを確認
 - テストが壊れた場合はテストも合わせて更新する
 
 ### 4. 報告
+
 - 検出した問題の一覧（重要度別）
 - 修正した項目
 - 修正しなかった項目とその理由
 - 追加で対応が必要な事項
 
 ## 重要なルール
+
 - **ネイティブ要素優先** — `<div role="button">` より `<button>` を使う
 - **過剰な aria を避ける** — ネイティブ要素が適切なら aria は不要
 - **テストを壊さない** — 修正後は必ずテスト実行
