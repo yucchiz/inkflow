@@ -91,7 +91,7 @@ export default function ConfirmDialog({
           <button
             type="button"
             onClick={onConfirm}
-            className="cursor-pointer rounded-lg bg-(--color-danger) px-4 py-2 text-sm text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-(--color-accent) focus-visible:outline-none motion-safe:transition-colors"
+            className="cursor-pointer rounded-lg bg-(--color-danger-bg) px-4 py-2 text-sm text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-(--color-accent) focus-visible:outline-none motion-safe:transition-colors"
           >
             {confirmLabel}
           </button>

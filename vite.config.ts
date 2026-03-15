@@ -15,8 +15,8 @@ export default defineConfig({
         name: 'InkFlow',
         short_name: 'InkFlow',
         description: '書く。ただ、それだけを美しく。',
-        theme_color: '#f3f4f6',
-        background_color: '#f3f4f6',
+        theme_color: '#e8edf5',
+        background_color: '#e8edf5',
         display: 'standalone',
         start_url: '/',
         icons: [
