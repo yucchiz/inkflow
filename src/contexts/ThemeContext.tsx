@@ -17,9 +17,14 @@ function resolveTheme(theme: Theme): ResolvedTheme {
 
 function applyThemeToDOM(resolvedTheme: ResolvedTheme): void {
   document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
+  // Theme transition: temporarily add transitioning class to body
+  document.body.classList.add('theme-transitioning');
+  setTimeout(() => {
+    document.body.classList.remove('theme-transitioning');
+  }, 300); // --duration-slow
 }
 
-function themeReducer(state: ThemeState, action: ThemeAction): ThemeState {
+function themeReducer(_state: ThemeState, action: ThemeAction): ThemeState {
   switch (action.type) {
     case 'SET_THEME':
       return {

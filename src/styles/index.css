@@ -49,4 +49,122 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   letter-spacing: 0.02em;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* ConfirmDialog: closing fade-out, 150ms ease-in */
+dialog.closing {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-in);
+}
+dialog.closing::backdrop {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-in);
+}
+
+/* Theme transition: smooth color changes, 300ms ease-in-out */
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-transitioning,
+  body.theme-transitioning *,
+  body.theme-transitioning *::before,
+  body.theme-transitioning *::after {
+    transition:
+      background-color var(--duration-slow) var(--ease-in-out),
+      color var(--duration-slow) var(--ease-in-out),
+      border-color var(--duration-slow) var(--ease-in-out);
+  }
+}
+
+/* ConfirmDialog: scale(0.95->1) + fade-in, 200ms ease-out */
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* DropdownMenu: scale(0.95->1) + fade-in, origin top-right, 150ms ease-out */
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* CardList: fade-in + slide-up, 300ms ease-out */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page transition: fade-in, 200ms ease-out */
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Page transition: fade-out, 150ms ease-in */
+@keyframes page-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* FAB: tap feedback, scale bounce 150ms */
+@keyframes fab-tap {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* FAB: scale(0->1) + fade-in, 300ms ease-out */
+@keyframes fab-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Toast/UpdateNotification: slide-up + fade-in, 200ms ease-out */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
