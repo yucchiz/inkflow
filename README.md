@@ -37,7 +37,7 @@ Sources/InkFlowKit/          # SPM ライブラリ（全ロジック + View）
 ├── Theme/                    # カラートークン・タイポグラフィ・ThemeManager
 └── Utilities/                # DateFormatter, ExportHelper, Constants
 
-Tests/InkFlowKitTests/        # ユニットテスト（69テスト）
+Tests/InkFlowKitTests/        # ユニットテスト（72テスト）
 
 App/                          # Xcode プロジェクト（アプリバンドル）
 ├── InkFlow/                  # @main エントリーポイント

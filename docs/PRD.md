@@ -84,7 +84,7 @@
 |------|------|
 | デバウンス | 500ms（最後の入力から500ms後に SwiftData へ書き込み）。`Task.sleep(for:)` + キャンセルで実装 |
 | 保存対象 | タイトル、本文、更新日時 |
-| インジケーター | ヘッダーに「保存済み」表示 → 2秒後にフェードアウト |
+| インジケーター | ヘッダーに「保存しました」表示 → 2秒後にフェードアウト |
 | エラー時 | 「保存に失敗しました」のトースト通知 |
 
 #### 文字数カウント
@@ -93,17 +93,19 @@
 |------|------|
 | 表示位置 | ステータスバー（画面下部） |
 | 対象 | 本文のみ（タイトルは含まない） |
-| 表示形式 | 「1,234 文字」（リアルタイム更新） |
+| 表示形式 | 「1234文字」（スペース・カンマなし、リアルタイム更新） |
 
 #### タイポグラフィ
 
 | 項目 | iPhone（Compact） | Mac / iPad（Regular） |
 |------|---------|-------------|
-| 本文フォントサイズ | 16pt | 18pt |
-| タイトルフォントサイズ | 22pt | 28pt |
+| 本文フォントサイズ | `.body` TextStyle | `.body` TextStyle |
+| タイトルフォントサイズ | `.title2` TextStyle | `.title2` TextStyle |
 | 行間 | 1.8 | 2.0 |
 | エディタ最大幅 | 全幅（左右パディング: 16pt） | 680pt（中央寄せ） |
 | フォント | `docs/design-language.md` の「タイポグラフィ」セクションを参照 |
+
+> **実装ノート**: Dynamic Type に対応するため、固定 pt サイズではなく SwiftUI の TextStyle（`.body`, `.title2` 等）を使用する。sizeClass による Compact / Regular の切り替えは未実装。
 
 > 本文は Noto Serif JP をアプリにバンドル。UI はシステムフォント（San Francisco / ヒラギノ）を使用。フォントバンドルにより常にオフラインで一貫した執筆体験を提供する。
 
@@ -293,7 +295,7 @@ UI言語は日本語のみ（MVP）。入力言語は制限なし。
 | 要素 | 仕様 |
 |------|------|
 | 表示条件 | SwiftData からドキュメント読み込み中（`isLoading == true`） |
-| 表示内容 | スケルトンUI（カード3枚分のプレースホルダー）。タイトル・プレビュー・日時の位置にグレーのパルスアニメーション（`.redacted(reason: .placeholder)`） |
+| 表示内容 | `ProgressView()` による標準ローディングインジケータ |
 | FAB | ローディング中も表示（即座に新規作成可能） |
 
 #### エラー状態
@@ -319,7 +321,7 @@ UI言語は日本語のみ（MVP）。入力言語は制限なし。
 | 要素 | 仕様 |
 |------|------|
 | 戻るボタン | 左端。ナビゲーションバーの自動バック（`NavigationStack` 標準） |
-| 保存ステータス | 中央付近。保存完了時に「保存済み」表示 → 2秒後にフェードアウト |
+| 保存ステータス | 中央付近。保存完了時に「保存しました」表示 → 2秒後にフェードアウト |
 | メニューボタン | 右端。タップでメニュー表示 |
 
 #### メニュー（`.menu` / `.confirmationDialog`）
@@ -339,8 +341,10 @@ UI言語は日本語のみ（MVP）。入力言語は制限なし。
 | 実装 | SwiftUI `TextField` |
 | プレースホルダー | 「タイトル」 |
 | 改行 | 不可（Return で本文へフォーカス移動。`@FocusState` で制御） |
-| 文字数制限 | 200文字（`.onChange` で切り詰め）。残り20文字以下で文字数カウント表示（例: 「185 / 200」）。カウントは `InkFlow.text` + `.bold()` で強調表示 |
+| 文字数制限 | 200文字（`.onChange` で切り詰め） |
 | ボーダー | なし |
+
+> **実装ノート**: 残り20文字以下での文字数カウント表示（例: 「185 / 200」）は未実装。現在は文字数制限のみ（`.onChange` で 200 文字にトリム）。残り文字数カウント UI は Phase 2 以降の拡張として検討。
 
 #### 本文入力欄
 
@@ -359,6 +363,8 @@ UI言語は日本語のみ（MVP）。入力言語は制限なし。
 | 内容 | 文字数カウント |
 | 入力中の挙動 | テキスト入力開始時にフェードアウト。入力停止から3秒後にフェードインで再表示（「道具は消える」原則） |
 | 集中モード時 | 非表示 |
+
+> **実装ノート**: 入力中の自動非表示は未実装。現在はステータスバーを常時表示している。
 
 ### 3.3 共通UI要素
 
@@ -467,7 +473,7 @@ class DocumentListViewModel {
     var error: Error?
 
     func loadDocuments() async { ... }
-    func createDocument() async -> InkDocument? { ... }
+    func createDocument() async -> UUID? { ... }  // ナビゲーション先にドキュメント ID を渡すため UUID を返す
     func deleteDocument(_ id: UUID) async { ... }
 }
 ```
@@ -477,18 +483,22 @@ class DocumentListViewModel {
 ```swift
 @Observable
 class EditorViewModel {
-    var document: InkDocument
+    public private(set) var documentId: UUID?
+    public var title: String = ""     // didSet で scheduleSave()
+    public var body: String = ""      // didSet で scheduleSave()
+    public var createdAt: Date = .now
+    public var updatedAt: Date = .now
     var saveStatus: SaveStatus = .idle  // .idle | .saving | .saved
     var isFocusMode = false
     var showControls = true
 
-    func updateTitle(_ title: String) { ... }
-    func updateBody(_ body: String) { ... }
     func save() async { ... }
     func deleteDocument() async { ... }
-    func cleanupEmptyDocument() async { ... }
+    func onDisappear() async { ... }  // 画面離脱時に空ドキュメント削除 + pending flush
 }
 ```
+
+> **実装ノート**: `title` / `body` プロパティの `didSet` で `scheduleSave()` が呼ばれるため、`updateTitle()` / `updateBody()` メソッドは不要。`cleanupEmptyDocument()` は `onDisappear()` に統合され、画面離脱時に空ドキュメント削除と pending な保存のフラッシュを一括処理する。
 
 #### ThemeManager
 
@@ -572,3 +582,5 @@ withAnimation(reduceMotion ? .none : .inkNormal) {
 | トースト | 表示 | スライドアップ + フェードイン（`.transition(.move(edge: .bottom).combined(with: .opacity))`） | 200ms | `.easeOut` |
 | トースト | 消滅 | フェードアウト（3秒後に自動開始） | 200ms | `.easeIn` |
 | 確認ダイアログ | 表示/閉じる | `.confirmationDialog` のシステム標準アニメーション | システム標準 | システム標準 |
+
+> **実装ノート**: ステータスバーの入力中フェードアウト / 入力停止後フェードインは未実装。現在は常時表示。

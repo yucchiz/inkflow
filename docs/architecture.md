@@ -46,6 +46,16 @@ InkFlow/
 | アニメーション | SwiftUI `.animation()` + `.transition()` | 60fps、GPU 最適化 |
 | 空ドキュメント削除 | 画面離脱時に title+body が空なら自動削除 | Web 版と同一ロジック |
 
+## 並行性モデル
+
+全レイヤーが `@MainActor` で統一:
+- `DocumentRepository` protocol — `@MainActor`
+- `SwiftDataRepository` — `@MainActor final class`（`ModelContext` を使用）
+- ViewModels — `@MainActor @Observable final class`
+- Views — SwiftUI View（暗黙的に MainActor）
+
+テストの `MockDocumentRepository` も `@MainActor final class` で定義する。`actor` ではない点に注意。
+
 ## データモデル
 
 > 注: データモデルは `docs/PRD.md` 4.1 にも記載あり（意図的な重複）。変更時は両方を更新すること。
@@ -77,4 +87,4 @@ enum ThemeMode: String, CaseIterable {
 | View 再描画 | 60fps 維持 |
 | メモリ使用量 | < 50MB（通常使用時） |
 | アプリサイズ | < 15MB（フォントバンドル込み） |
-| 自動保存レイテンシ | < 50ms（SwiftData 書き込み） |
+| 自動保存レイテンシ | < 100ms（SwiftData 書き込み） |

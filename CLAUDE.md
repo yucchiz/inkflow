@@ -28,7 +28,7 @@ xcodebuild -scheme InkFlow test          # UI テスト含む全テスト
 
 ### テックスタック
 
-Swift 6 + SwiftUI + SwiftData + NavigationStack。状態管理は @Observable（外部ライブラリ不使用）。ストレージは SwiftData（ModelContainer）+ @AppStorage（UserDefaults）。アイコンは SF Symbols。SPM（Swift Package Manager）でプロジェクト管理。
+Swift 6 + SwiftUI + SwiftData + NavigationStack。状態管理は @Observable（外部ライブラリ不使用）。ストレージは SwiftData（ModelContainer）+ UserDefaults（テーマ設定）。アイコンは SF Symbols。SPM ライブラリ（InkFlowKit）+ Xcode プロジェクト（App/）のハイブリッド構成。`project.yml`（xcodegen）で Xcode プロジェクトを管理。
 
 ### データフロー
 
@@ -53,7 +53,7 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 |----------|------|------|
 | データモデル | `Sources/InkFlowKit/Models/` | `@Model InkDocument` — SwiftData モデル（id: UUID, title, body, createdAt, updatedAt） |
 | データ層 | `Sources/InkFlowKit/Data/` | `DocumentRepository` protocol + `SwiftDataRepository` 実装 + `DocumentFactory` |
-| ViewModel | `Sources/InkFlowKit/ViewModels/` | `@Observable` DocumentListViewModel, EditorViewModel（自動保存500msデバウンス含む） |
+| ViewModel | `Sources/InkFlowKit/ViewModels/` | `@Observable` DocumentListViewModel, EditorViewModel（自動保存500msデバウンス含む）, SaveStatus（idle/saving/saved） |
 | ルートView | `Sources/InkFlowKit/Views/ContentView/` | NavigationStack ルート |
 | 一覧画面 | `Sources/InkFlowKit/Views/DocumentList/` | DocumentListView, DocumentCardView（スワイプ削除）, EmptyStateView, FABButton |
 | エディタ | `Sources/InkFlowKit/Views/Editor/` | EditorView, TitleInputView, BodyTextEditor, StatusBarView, EditorHeaderView, EditorMenuView |
@@ -62,12 +62,22 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 | ユーティリティ | `Sources/InkFlowKit/Utilities/` | DateFormatter+InkFlow（今日→HH:MM / 昨日→「昨日」/ 今年→M月D日）, ExportHelper（UIPasteboard + ShareLink）, Constants |
 | テスト | `Tests/InkFlowKitTests/` | Models/, Data/, ViewModels/, Utilities/ のユニットテスト |
 
+### 並行性モデル
+
+全レイヤーが `@MainActor` で統一されている:
+- `DocumentRepository` protocol — `@MainActor`
+- `SwiftDataRepository` — `@MainActor final class`（`ModelContext` を使用）
+- ViewModels — `@MainActor @Observable final class`
+- Views — SwiftUI View（暗黙的に MainActor）
+
+テストの `MockDocumentRepository` も `@MainActor final class`（`actor` ではない）。
+
 ### テーマシステム
 
-1. `ThemeManager` が `@AppStorage("inkflow:theme")` でテーマモード（light/dark/system）を永続化
+1. `ThemeManager` が `UserDefaults.standard` でテーマモード（light/dark/system）を永続化（`@AppStorage` は `@Observable` 内で直接使えないため）
 2. `.preferredColorScheme(themeManager.resolvedColorScheme)` でアプリ全体に適用
 3. `resolvedColorScheme` が `nil`（system モード）の場合、OS の設定に自動追従
-4. カラーパレットはネイビー基調（`Color.InkFlow.bg`, `Color.InkFlow.text` 等すべてネイビー系）
+4. カラーパレットはネイビー基調（`Color.InkFlow.bg(for: colorScheme)`, `Color.InkFlow.text(for: colorScheme)` 等すべてネイビー系。`@Environment(\.colorScheme)` で取得した値を渡す）
 5. `Color.InkFlow.danger` はテキスト用、`Color.InkFlow.dangerBg` はボタン背景用に分離（ダークモードでのコントラスト両立のため）
 
 ### カラーパレット（ネイビー基調）
@@ -150,11 +160,11 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 
 ## テストパターン
 
-- **SwiftData テスト**: in-memory `ModelConfiguration(isStoredInMemoryOnly: true)` で `ModelContainer` を生成し、テスト間の独立性を保証
-- **ViewModel テスト**: `DocumentRepository` protocol に対する Mock 実装を注入（依存性注入）
-- **日時フォーマットテスト**: 固定 `Date` を生成してフォーマット結果をアサート
+- **ViewModel テスト**: `@MainActor final class MockDocumentRepository` を注入（依存性注入）。Mock は spy パターン（`saveCallCount`, `lastRemovedId` 等）+ 個別エラーフラグ（`shouldThrowOnSave` 等）
+- **SwiftData 統合テスト**: in-memory `ModelConfiguration(isStoredInMemoryOnly: true)` で `ModelContainer` を生成し、テスト間の独立性を保証
+- **日時フォーマットテスト**: `inkFlowFormatted(now:)` で「現在時刻」を注入し、決定的にテスト
 - **非同期テスト**: `async` テスト関数 + `Task.sleep` でデバウンスを待機
-- **Swift Testing フレームワーク**: `@Suite`, `@Test`, `#expect()` を使用（XCTest ではなく Swift Testing を優先）
+- **Swift Testing フレームワーク**: `@Suite`, `@Test("日本語の説明")`, `#expect()`, `#require()` を使用（XCTest ではなく Swift Testing を優先）
 
 ## デプロイ
 

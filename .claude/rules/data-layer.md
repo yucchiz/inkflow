@@ -9,31 +9,27 @@ globs: ['Sources/**/Models/**/*.swift', 'Sources/**/Data/**/*.swift', 'Sources/*
 - モデルは `@Model` マクロで定義する
 - CRUD 操作は `ModelContext` 経由で行う（`insert`, `delete`, `fetch`, `save`）
 - 全ての SwiftData 操作は必ず do-catch でラップする
-- エラー時は `Logger` でコンテキスト情報付きのログを出力する
-- ユーザー向けエラーはアラートまたはバナーで表示する
+- エラー時は `print("[プレフィックス]", context)` でコンテキスト情報付きのログを出力する
+- ユーザー向けエラーはトースト通知で表示する
 
 ## 状態管理
 
 - ViewModel は `@Observable` マクロで定義する
 - 外部状態管理ライブラリ（TCA, ReSwift 等）は使用しない
-- ViewModel は責務ごとに分離する（DocumentViewModel, SettingsViewModel 等）
+- ViewModel は責務ごとに分離する（DocumentListViewModel, EditorViewModel）
 - View から `ModelContext` を直接操作しない — 必ず ViewModel 経由にする
 - テーマ等の軽量な設定値は `@AppStorage` を使用する
 
 ## エラーハンドリングのパターン
 
 ```swift
-import os
-
-private let logger = Logger(subsystem: "com.inkflow.app", category: "DocumentRepository")
-
-func saveDocument(_ document: Document) {
+func saveDocument(_ document: InkDocument) async {
     do {
         modelContext.insert(document)
         try modelContext.save()
     } catch {
-        logger.error("ドキュメント保存に失敗: documentId=\(document.id), error=\(error)")
-        // アラートまたはバナーでユーザーに通知
+        print("[SwiftDataRepository] ドキュメント保存に失敗:", document.id, error)
+        // トースト通知でユーザーに通知
     }
 }
 ```

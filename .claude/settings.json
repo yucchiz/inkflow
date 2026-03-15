@@ -35,7 +35,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Write(Sources/**/*.swift)|Edit(Sources/**/*.swift)",
+        "matcher": "Write(Sources/**/*.swift)|Edit(Sources/**/*.swift)|Write(App/**/*.swift)|Edit(App/**/*.swift)",
         "hooks": [
           {
             "type": "command",

@@ -23,6 +23,7 @@ globs: ['Tests/**/*.swift']
 
 - SwiftData は in-memory 構成でテストする: `ModelConfiguration(isStoredInMemoryOnly: true)`
 - Protocol を定義して依存を注入し、テスト時はモック実装に差し替える
+- Mock は `@MainActor final class` で定義する（ViewModel が `@MainActor` なため。`actor` ではない）
 - モックは最小限に — 本物を使えるなら本物を使う
 
 ## 記述スタイル
