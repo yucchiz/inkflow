@@ -1,13 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run dev:*)",
-      "Bash(npm run build:*)",
-      "Bash(npm run lint:*)",
-      "Bash(npm run format:*)",
-      "Bash(npm run test:*)",
-      "Bash(npm run preview:*)",
-      "Bash(npx:*)",
+      "Bash(swift build:*)",
+      "Bash(swift test:*)",
+      "Bash(swift package:*)",
+      "Bash(xcodebuild:*)",
       "Bash(git diff:*)",
       "Bash(git diff --staged:*)",
       "Bash(git diff --cached:*)",
@@ -15,10 +12,13 @@
       "Bash(git show:*)",
       "Bash(git status:*)",
       "Bash(git stash:*)",
-      "Bash(git checkout -- src/:*)",
       "Read(*)",
-      "Write(src/**)",
-      "Edit(src/**)"
+      "Write(Sources/**)",
+      "Write(Tests/**)",
+      "Write(App/**)",
+      "Edit(Sources/**)",
+      "Edit(Tests/**)",
+      "Edit(App/**)"
     ]
   },
   "hooks": {
@@ -28,18 +28,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npm run lint && npm run format:check && npm run test -- --run"
+            "command": "swift build 2>&1 | tail -20 && swift test 2>&1 | tail -30"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write(src/**/*.ts*)|Edit(src/**/*.ts*)",
+        "matcher": "Write(Sources/**/*.swift)|Edit(Sources/**/*.swift)",
         "hooks": [
           {
             "type": "command",
-            "command": "npx tsc --noEmit 2>&1 | tail -20 || true"
+            "command": "swift build 2>&1 | tail -20 || true"
           }
         ]
       }

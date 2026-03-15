@@ -12,8 +12,8 @@ tools: Read, Glob, Grep
 
 ### 1. 対象コードの読み込み
 
-- 指定されたファイル・関数・コンポーネントを読み込む
-- 関連するファイル（型定義、インポート元、Context等）も必要に応じて読み込む
+- 指定されたファイル・関数・View を読み込む
+- 関連するファイル（型定義、プロトコル、Model、Observable クラス等）も必要に応じて読み込む
 - `docs/PRD.md` を参照し、仕様上の位置づけを把握する
 
 ### 2. コード解説
@@ -34,20 +34,27 @@ tools: Read, Glob, Grep
 
 #### 構文・パターンの解説
 
-- 使われている JavaScript/TypeScript の構文:
-  - アロー関数、分割代入、スプレッド構文、オプショナルチェイニング等
-  - テンプレートリテラル、タグ付きテンプレート
-  - async/await、Promise
-- TypeScript 固有の構文:
-  - ジェネリクス、ユニオン型、交差型
-  - 型ガード、型アサーション
-  - `interface` vs `type` の使い分け
-- React 固有のパターン:
-  - フック（useState, useEffect, useReducer, useContext, useMemo, useCallback, useRef）
-  - カスタムフック
-  - Context パターン
-  - イベントハンドリング
-- Tailwind CSS クラスの意味
+- 使われている Swift の構文:
+  - クロージャ、トレイリングクロージャ構文
+  - Optional バインディング（`if let`, `guard let`, `??`）
+  - guard 文による早期リターン
+  - async/await、Task、structured concurrency
+  - Result 型、throws/try/catch
+  - enum with associated values
+  - プロパティラッパー（`@State`, `@Binding`, `@AppStorage` 等）
+- Swift 固有の構文:
+  - ジェネリクス、プロトコル、プロトコル拡張
+  - `@Observable` マクロ、`@Model` マクロ
+  - property wrapper の仕組み
+  - extension によるコード整理
+  - 値型（struct/enum）vs 参照型（class）の使い分け
+- SwiftUI 固有のパターン:
+  - `@State`, `@Binding`, `@Environment` によるデータバインディング
+  - `@Observable` による状態管理
+  - NavigationStack によるナビゲーション
+  - `.sheet`, `.alert`, `.confirmationDialog` によるモーダル表示
+  - `.task` modifier による非同期処理
+  - View の合成とカスタム View Builder
 
 #### 「なぜこう書いているか」の解説
 
@@ -62,7 +69,7 @@ tools: Read, Glob, Grep
 ## 出力フォーマット
 
 ```
-## 📖 コード解説: [ファイル名 or コンポーネント名]
+## 📖 コード解説: [ファイル名 or View 名]
 
 ### 概要
 [ファイルの役割と仕様上の位置づけ]

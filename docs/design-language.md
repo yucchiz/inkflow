@@ -23,76 +23,77 @@
 | 淡藍 | 背景基調色（ライト） | `#E8EDF5` |
 | 紺青 | アクセント（ボタン、リンク） | `#1E40AF` |
 
-### テーマ CSS変数
+### テーマカラー定義
 
-| 変数名 | ライト | ダーク |
-|--------|--------|--------|
-| `--color-bg` | `#E8EDF5` | `#0C1525` |
-| `--color-bg-sub` | `#F0F3F9` | `#162038` |
-| `--color-text` | `#1A2340` | `#E2E8F4` |
-| `--color-text-sub` | `#5C6785` | `#8A95B0` |
-| `--color-border` | `#C8D0E0` | `#253050` |
-| `--color-accent` | `#1E40AF` | `#2D6CD6` |
-| `--color-accent-hover` | `#1E3A8A` | `#3570D4` |
-| `--color-danger` | `#B91C1C` | `#F45252` |
-| `--color-danger-bg` | `#B91C1C` | `#DC2626` |
+| プロパティ | ライト | ダーク |
+|-----------|--------|--------|
+| `Color.InkFlow.bg` | `#E8EDF5` | `#0C1525` |
+| `Color.InkFlow.bgSub` | `#F0F3F9` | `#162038` |
+| `Color.InkFlow.text` | `#1A2340` | `#E2E8F4` |
+| `Color.InkFlow.textSub` | `#5C6785` | `#8A95B0` |
+| `Color.InkFlow.border` | `#C8D0E0` | `#253050` |
+| `Color.InkFlow.accent` | `#1E40AF` | `#2D6CD6` |
+| `Color.InkFlow.accentHover` | `#1E3A8A` | `#3570D4` |
+| `Color.InkFlow.danger` | `#B91C1C` | `#F45252` |
+| `Color.InkFlow.dangerBg` | `#B91C1C` | `#DC2626` |
 
 > 全テキスト・背景の組み合わせで WCAG AA コントラスト比 4.5:1 以上を保証すること。
 
 ### 色に頼らない区別の原則
 
-- **破壊的操作**（削除）: TrashIcon の形状 + 確認ダイアログのテキストで明示。色での警告は行わない
-- **FAB**: `--color-text` 背景 + `--color-bg` アイコン色（反転コントラスト）で視認性を確保
-- **フォーカスリング**: `2px solid var(--color-text)` + `2px offset`
+- **破壊的操作**（削除）: trash (SF Symbol) の形状 + 確認ダイアログのテキストで明示。色での警告は行わない
+- **FAB**: `Color.InkFlow.text` 背景 + `Color.InkFlow.bg` アイコン色（反転コントラスト）で視認性を確保
+- **フォーカスリング**: SwiftUI 標準のフォーカスリング（`.focusable()` + `@FocusState`）を使用。アクセシビリティ設定に自動追従
 
 ---
 
 ## タイポグラフィ
 
-| 用途 | フォント | ウェイト | letter-spacing |
-|------|---------|---------|----------------|
-| 本文 | Noto Serif JP | 400 | 0.02em |
-| タイトル | Noto Sans JP | 700 | 0.04em |
-| UI要素 | Noto Sans JP | 400 | 0.02em |
+| 用途 | フォント | ウェイト | 文字間隔 (tracking) |
+|------|---------|---------|---------------------|
+| 本文 | Noto Serif JP | 400 | 0.32pt |
+| タイトル | Noto Sans JP | 700 | 0.64pt |
+| UI要素 | システムフォント (San Francisco) | 400 | 0.32pt |
 
 ### フォントスタック
 
-```css
---font-body: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
---font-heading: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
---font-ui: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+```swift
+// 本文
+Font.custom("NotoSerifJP-Regular", size: 16)
+// UI
+Font.system(.body)  // San Francisco
 ```
 
-Google Fonts CDN で読み込み。`display=swap` 指定。使用ウェイトのみ（400, 700）をロードする。
+Noto Serif JP 400 をアプリにバンドル。UI はシステムフォント（San Francisco）を使用。使用ウェイトのみ（400, 700）をバンドルする。
 
 ---
 
 ## アイコン
 
-**ライブラリ**: Heroicons v2 / Outline / 20px / `currentColor`
+**ライブラリ**: SF Symbols / Regular
 
-### MVP使用アイコン一覧
+### 使用アイコン一覧
 
-| アイコン名 | 用途 |
-|-----------|------|
-| `PlusIcon` | FAB（新規作成） |
-| `TrashIcon` | 削除ボタン |
-| `ArrowLeftIcon` | 戻るボタン |
-| `EllipsisVerticalIcon` | メニューボタン |
-| `ClipboardDocumentIcon` | クリップボードコピー |
-| `ArrowDownTrayIcon` | ダウンロード |
-| `SunIcon` | ライトテーマ |
-| `MoonIcon` | ダークテーマ |
-| `ComputerDesktopIcon` | システムテーマ |
-| `ArrowsPointingInIcon` | 集中モード開始 |
-| `ArrowsPointingOutIcon` | 集中モード解除 |
-| `PencilIcon` | 空状態（EmptyState） |
+| 用途 | SF Symbol |
+|------|-----------|
+| FAB（新規作成） | `plus` |
+| 削除ボタン | `trash` |
+| 戻るボタン | `chevron.left` |
+| メニューボタン | `ellipsis.circle` |
+| クリップボードコピー | `doc.on.doc` |
+| 共有 | `square.and.arrow.up` |
+| ライトテーマ | `sun.max` |
+| ダークテーマ | `moon` |
+| システムテーマ | `desktopcomputer` |
+| 集中モード開始 | `arrow.down.right.and.arrow.up.left` |
+| 集中モード解除 | `arrow.up.left.and.arrow.down.right` |
+| 空状態 | `pencil` |
 
 ---
 
 ## スペーシング
 
-4px 基準のスケール。Tailwind CSS のデフォルトスペーシングに準拠する。
+4px 基準のスケール。
 
 | トークン | 値 | 主な用途 |
 |---------|------|----------|
@@ -109,43 +110,35 @@ Google Fonts CDN で読み込み。`display=swap` 指定。使用ウェイトの
 
 ## ブレークポイント
 
-| 名称 | 幅 | レイアウト方針 |
-|------|------|---------------|
-| モバイル | 〜767px | 単一カラム。左右 padding: 16px |
-| タブレット | 768px〜1023px | 単一カラム。余白を広めに |
-| デスクトップ | 1024px〜 | 単一カラム。コンテンツ最大幅制限、中央配置 |
-
-> PRD 2.2 のレスポンシブデザイン仕様と一致すること。
+| 環境 | 条件 | レイアウト方針 |
+|------|------|--------------|
+| iPhone | `.compact` horizontal | 単一カラム。セーフエリアに適応 |
+| iPad | `.regular` horizontal | 余白を広めに。将来的に NavigationSplitView 対応 |
+| macOS | ウィンドウサイズ | コンテンツ最大幅制限、中央配置 |
 
 ---
 
 ## トーン & マナー
 
 - **印象**: 落ち着き・静寂・気品
-- **角丸**: `8px`（`rounded-lg`）
-- **影**: 最小限。カード等に `shadow-sm` 程度
+- **角丸**: `.cornerRadius(8)`（8pt）
+- **影**: 最小限。カード等に `.shadow(radius: 2)` 程度
 - **マイクロコピー**: 丁寧語で簡潔に（例: 「保存しました」「削除しますか？」）
 
 ---
 
 ## 実装ガイドライン
 
-### FABタップアニメーション
+### FAB タップアニメーション
 
-```css
-@keyframes fab-tap {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(0.92); }
-  100% { transform: scale(1); }
+```swift
+Button { action() } label: {
+    Image(systemName: "plus")
 }
-/* duration: 150ms, easing: ease-in-out */
+.scaleEffect(isPressed ? 0.92 : 1.0)
+.animation(.easeInOut(duration: 0.15), value: isPressed)
 ```
 
-### textarea 高さ自動拡張
+### TextEditor 高さ自動拡張
 
-```typescript
-function adjustHeight(textarea: HTMLTextAreaElement) {
-  textarea.style.height = 'auto';
-  textarea.style.height = `${textarea.scrollHeight}px`;
-}
-```
+SwiftUI の `TextEditor` はコンテンツに合わせて自動拡張される（明示的な高さ調整は不要）。

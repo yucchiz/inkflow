@@ -1,74 +1,76 @@
 # InkFlow
 
-> 書く。ただ、それだけを美しく。
+「書く。ただ、それだけを美しく。」
 
-プレーンテキストの執筆に特化したシンプルな PWA アプリ。美しい UI と心地よい書き味で、書くことだけに集中できる環境を提供します。
+シンプルな執筆専用ネイティブアプリ（iOS / macOS）。プレーンテキストの執筆に特化し、美しいUIと心地よい書き味を提供します。
 
-## 主要機能
+## 特徴
 
-- オフライン対応（PWA / Service Worker）
-- 自動保存（500ms デバウンス）
-- ダークモード（システム設定追従 / 手動切替）
-- 集中モード（UI を非表示にして執筆に集中）
-- テキストのコピー・ダウンロード
-- レスポンシブデザイン（デスクトップ・モバイル対応）
+- 余計な機能のない、執筆に集中できるエディタ
+- 500ms デバウンスの自動保存
+- ライト / ダーク / システム テーマ切替
+- 集中モード（UIを隠して執筆に没頭）
+- ネイビー基調「墨と余白」デザイン
+- VoiceOver / Dynamic Type 対応
+
+## 要件
+
+- Xcode 16+
+- iOS 17.0+ / macOS 14.0+
 
 ## テックスタック
 
-| カテゴリ       | 技術                             |
-| -------------- | -------------------------------- |
-| フレームワーク | React 19 + TypeScript (strict)   |
-| ビルド         | Vite 7                           |
-| スタイル       | Tailwind CSS v4                  |
-| 状態管理       | Context + useReducer             |
-| ストレージ     | IndexedDB (`idb`) + localStorage |
-| ルーティング   | React Router v7                  |
-| テスト         | Vitest + Testing Library         |
-| PWA            | vite-plugin-pwa (Workbox)        |
-
-## セットアップ
-
-```bash
-git clone <repository-url>
-cd inkflow
-npm install
-npm run dev
-```
-
-## 開発コマンド
-
-| コマンド                | 説明                              |
-| ----------------------- | --------------------------------- |
-| `npm run dev`           | 開発サーバー起動                  |
-| `npm run build`         | 型チェック + プロダクションビルド |
-| `npm run test`          | テスト実行（watch モード）        |
-| `npm run test -- --run` | テスト一括実行                    |
-| `npm run lint`          | ESLint                            |
-| `npm run format`        | Prettier（自動修正）              |
-| `npm run format:check`  | Prettier（チェックのみ）          |
+- Swift 6 + SwiftUI
+- SwiftData（ローカルストレージ）
+- NavigationStack（画面遷移）
+- SF Symbols（アイコン）
+- Swift Testing（テストフレームワーク）
 
 ## プロジェクト構成
 
 ```
-src/
-├── components/
-│   ├── common/           # 共通 UI（Toast, ConfirmDialog, Header 等）
-│   ├── document-list/    # 一覧画面（DocumentCard, EmptyState, Fab 等）
-│   └── editor/           # エディタ（TitleInput, BodyTextarea, StatusBar 等）
-├── contexts/             # React Context（Document, Theme, Toast）
-├── hooks/                # カスタムフック（useAutoSave, useFocusMode 等）
-├── lib/                  # ユーティリティ（DB, formatDate, exportDocument）
-├── pages/                # ページコンポーネント（DocumentListPage, EditorPage）
-├── styles/               # Tailwind エントリー + デザイントークン
-├── test/                 # テストセットアップ
-└── types/                # 型定義
+Sources/InkFlowKit/          # SPM ライブラリ（全ロジック + View）
+├── Models/                   # SwiftData @Model
+├── Data/                     # DocumentRepository protocol + 実装
+├── ViewModels/               # @Observable ViewModel
+├── Views/                    # SwiftUI View（ContentView, DocumentList, Editor, Common）
+├── Theme/                    # カラートークン・タイポグラフィ・ThemeManager
+└── Utilities/                # DateFormatter, ExportHelper, Constants
+
+Tests/InkFlowKitTests/        # ユニットテスト（69テスト）
+
+App/                          # Xcode プロジェクト（アプリバンドル）
+├── InkFlow/                  # @main エントリーポイント
+└── InkFlowUITests/           # UI テスト
+```
+
+## 開発
+
+```bash
+# ライブラリのビルド
+swift build
+
+# ユニットテスト実行
+swift test
+
+# テスト絞り込み
+swift test --filter InkFlowKitTests
+
+# アプリビルド（要 Xcode）
+xcodebuild -scheme InkFlow build
+
+# 全テスト（UI テスト含む）
+xcodebuild -scheme InkFlow test
 ```
 
 ## ドキュメント
 
-| ドキュメント                                         | 内容                                         |
-| ---------------------------------------------------- | -------------------------------------------- |
-| [`docs/PRD.md`](docs/PRD.md)                         | 機能要件・画面仕様・データ仕様               |
-| [`docs/architecture.md`](docs/architecture.md)       | テックスタック・設計判断・パフォーマンス基準 |
-| [`docs/design-language.md`](docs/design-language.md) | デザイン哲学「墨と余白」・カラーパレット     |
-| [`CLAUDE.md`](CLAUDE.md)                             | Claude Code 向けガイド・開発規約             |
+| ドキュメント | 内容 |
+|------------|------|
+| [PRD](docs/PRD.md) | 機能要件・画面仕様・データ仕様 |
+| [アーキテクチャ](docs/architecture.md) | テックスタック・プロジェクト構造・設計判断 |
+| [デザインランゲージ](docs/design-language.md) | 「墨と余白」デザインシステム |
+
+## ライセンス
+
+Private

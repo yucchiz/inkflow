@@ -1,30 +1,39 @@
 ---
-globs: ['src/lib/**/*.ts', 'src/contexts/**/*.tsx']
+globs: ['Sources/**/Models/**/*.swift', 'Sources/**/Data/**/*.swift', 'Sources/**/ViewModels/**/*.swift']
 ---
 
 # データ層・状態管理規約
 
-## IndexedDB 操作
+## SwiftData 操作
 
-- 全てのIndexedDB操作は必ず try-catch でラップする
-- エラー時はコンテキスト情報付きで `console.error` を出力する
-- ユーザー向けエラーはトースト通知で表示する
-- `DocumentRepository` インターフェースに準拠して実装する
+- モデルは `@Model` マクロで定義する
+- CRUD 操作は `ModelContext` 経由で行う（`insert`, `delete`, `fetch`, `save`）
+- 全ての SwiftData 操作は必ず do-catch でラップする
+- エラー時は `Logger` でコンテキスト情報付きのログを出力する
+- ユーザー向けエラーはアラートまたはバナーで表示する
 
 ## 状態管理
 
-- グローバル状態: React Context + `useReducer` パターン
-- 外部状態管理ライブラリ（Redux, Zustand等）は使用しない
-- Context は責務ごとに分離する（DocumentContext, ThemeContext）
-- Reducer のアクション型は discriminated union で定義する
+- ViewModel は `@Observable` マクロで定義する
+- 外部状態管理ライブラリ（TCA, ReSwift 等）は使用しない
+- ViewModel は責務ごとに分離する（DocumentViewModel, SettingsViewModel 等）
+- View から `ModelContext` を直接操作しない — 必ず ViewModel 経由にする
+- テーマ等の軽量な設定値は `@AppStorage` を使用する
 
 ## エラーハンドリングのパターン
 
-```typescript
-try {
-  // IndexedDB操作
-} catch (error) {
-  console.error('[DocumentRepository] ドキュメント保存に失敗:', { documentId, error });
-  // トースト通知でユーザーに通知
+```swift
+import os
+
+private let logger = Logger(subsystem: "com.inkflow.app", category: "DocumentRepository")
+
+func saveDocument(_ document: Document) {
+    do {
+        modelContext.insert(document)
+        try modelContext.save()
+    } catch {
+        logger.error("ドキュメント保存に失敗: documentId=\(document.id), error=\(error)")
+        // アラートまたはバナーでユーザーに通知
+    }
 }
 ```

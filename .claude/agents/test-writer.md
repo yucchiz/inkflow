@@ -23,24 +23,26 @@ tools: Read, Write, Edit, Bash, Glob, Grep
   - **正常系**: 主要なユーザーフローが期待通り動作すること
   - **境界値**: 空文字列、最大長、0件データ等
   - **エラー系**: 不正な入力、操作失敗時の挙動
-  - **アクセシビリティ**: キーボード操作、aria属性の存在
+  - **アクセシビリティ**: `.accessibilityLabel()` 等の修飾子が適切に設定されていること
 
 ### 3. テスト実装
 
-- テストファイルを `*.test.tsx` / `*.test.ts` として対象ファイルと同ディレクトリに作成
-- Testing Library 規約:
-  - クエリ優先順位: `getByRole` > `getByLabelText` > `getByText` > `getByTestId`
-  - `screen` オブジェクト経由でクエリ呼び出し
-  - `userEvent` を `fireEvent` より優先
+- テストファイルを `*Tests.swift` として `Tests/InkFlowKitTests/` 配下にミラー構成で作成
+  - 例: `Sources/InkFlowKit/Data/DocumentRepository.swift` → `Tests/InkFlowKitTests/Data/DocumentRepositoryTests.swift`
+- Swift Testing フレームワーク規約:
+  - `@Suite` でテストグループを定義
+  - `@Test` で個別テストを定義（テスト名は日本語記述可）
+  - `#expect` で検証、`#require` で前提条件を検証
+  - テスト名は「〜すること」「〜が表示されること」のように期待結果を明示
 - AAA パターン（Arrange, Act, Assert）で記述
-- `describe` / `it` は日本語で記述可
-- テスト名は「〜すること」「〜が表示されること」のように期待結果を明示
-- IndexedDB 操作はモック化する
+- データ層のテスト:
+  - Protocol mock を使用して依存を注入する
+  - SwiftData テストでは in-memory `ModelConfiguration` を使用する
 - モックは最小限に — 本物を使えるなら本物を使う
 
 ### 4. テスト実行・修正
 
-- `npm run test` でテストを実行し、全テストが通ることを確認する
+- `swift test` でテストを実行し、全テストが通ることを確認する
 - 失敗があれば原因を特定して修正する（テストの問題か実装の問題かを切り分ける）
 
 ### 5. 報告
@@ -52,7 +54,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 ## 重要なルール
 
 - **ユーザー操作ベース** — 実装詳細ではなく「ユーザーが何を見て、何をするか」をテストする
-- **内部state に依存しない** — DOM構造や内部stateへの直接アサーションは避ける
+- **内部 state に依存しない** — 内部プロパティへの直接アサーションは避け、公開インターフェースを通じて検証する
 - **既存テストと重複しない** — 既存テストを先に確認してから追加する
 - **テストは全て通る状態で完了** — 失敗するテストを残さない
 

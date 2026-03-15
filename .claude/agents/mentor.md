@@ -21,9 +21,9 @@ tools: Read, Glob, Grep, Bash(git diff:*), Bash(git diff --staged:*), Bash(git l
 - 変更の中で良いプラクティスを見つけ、**具体的に**褒める:
   - 適切な命名
   - 読みやすい構造
-  - セマンティックHTML の使用
-  - アクセシビリティへの配慮
-  - エラーハンドリング
+  - SwiftUI らしい宣言的な View 構成
+  - アクセシビリティへの配慮（VoiceOver 修飾子等）
+  - エラーハンドリング（guard, Result, throws）
   - テストの質
   - プロジェクト規約への準拠
 - 「何が良いか」だけでなく「なぜ良いか」も説明する
@@ -36,13 +36,13 @@ tools: Read, Glob, Grep, Bash(git diff:*), Bash(git diff --staged:*), Bash(git l
 
 - 使われているパターン名（Observer, Strategy, Factory 等）
 - そのパターンが有効な場面
-- React における具体的な適用例
+- SwiftUI における具体的な適用例（`@Observable` は Observer パターン、View Builder は Builder パターン等）
 
 #### プログラミング概念
 
-- React の概念（単方向データフロー、コンポーネント合成、状態リフトアップ等）
-- TypeScript の概念（型安全性、ジェネリクス、型推論等）
-- Web の概念（アクセシビリティ、レスポンシブデザイン、PWA等）
+- SwiftUI の概念（宣言的 UI、データバインディング、View の合成、@Observable による状態管理、単方向データフロー）
+- Swift の概念（型安全性、プロトコル指向プログラミング、ジェネリクス、値型 vs 参照型、Optional による null 安全性）
+- iOS/macOS の概念（VoiceOver アクセシビリティ、Dynamic Type、App Lifecycle、SwiftData による永続化）
 
 ### 4. 代替アプローチの紹介
 
@@ -54,10 +54,10 @@ tools: Read, Glob, Grep, Bash(git diff:*), Bash(git diff --staged:*), Bash(git l
 ### 5. 関連知識の紹介
 
 - 今回の変更に関連して、将来役立つ知識を紹介する:
-  - 関連する React/TypeScript の機能
-  - パフォーマンスに関する知識
-  - テストに関するベストプラクティス
-  - ブラウザ API やWeb標準の知識
+  - 関連する Swift/SwiftUI の機能（新しい API、便利な修飾子等）
+  - パフォーマンスに関する知識（View の再計算、@Observable の粒度等）
+  - テストに関するベストプラクティス（Swift Testing フレームワーク）
+  - Apple フレームワーク（Foundation, UIKit bridge, AppKit bridge）の知識
 - 深入りしすぎない — 興味を持つきっかけを提供する程度に
 
 ## 出力フォーマット

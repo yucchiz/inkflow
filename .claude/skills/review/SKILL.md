@@ -23,27 +23,26 @@ allowed-tools:
 2. **レビュー観点**:
 
    ### コーディング規約
-   - CLAUDE.md のコーディング規約に準拠しているか
-   - 命名規則（PascalCase, camelCase, UPPER_SNAKE_CASE）
-   - コンポーネント設計（関数宣言、Props型定義、1ファイル1コンポーネント）
-   - インポート順序
+   - CLAUDE.md の Swift コーディング規約に準拠しているか
+   - 命名規則（PascalCase for types/protocols, camelCase for properties/functions）
+   - View 設計（struct View 準拠、1ファイル1View）
+   - ファイル構成とモジュール分割
 
    ### アクセシビリティ
-   - セマンティックHTML の使用
-   - aria属性の適切な付与
-   - キーボード操作対応
-   - フォーカス管理
-   - `prefers-reduced-motion` 対応
+   - `.accessibilityLabel()` の適切な付与
+   - VoiceOver 対応（ナビゲーション順序、操作説明）
+   - Dynamic Type 対応
+   - `@Environment(\.accessibilityReduceMotion)` によるモーション軽減対応
 
    ### パフォーマンス
-   - 不要な再レンダリングの原因（インラインオブジェクト/関数の props 渡し等）
-   - バンドルサイズへの影響（大きなライブラリの追加等）
-   - `transform` + `opacity` 以外のアニメーションプロパティ使用
+   - View 再計算の効率（不要な body 再評価の回避）
+   - `@Observable` のプロパティ粒度（過剰な監視による無駄な再描画の防止）
+   - 重い計算の適切なキャッシュ・遅延実行
 
    ### セキュリティ
-   - XSS 脆弱性（`dangerouslySetInnerHTML` 不使用）
-   - ユーザー入力のサニタイズ
+   - force unwrap（`!`）の不適切な使用
    - シークレットのハードコード
+   - 安全でない `Any` キャスト（`as!` の濫用）
 
 3. **結果報告**:
    - 問題点を重要度（Critical / Warning / Info）で分類

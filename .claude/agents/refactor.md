@@ -14,33 +14,32 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 
 - リファクタリング対象のコードを読み込む
 - 関連するテストファイルを特定し、存在を確認する
-- `npm run test` を実行し、**変更前にテストが全パスする**ことを確認する
+- `swift test` を実行し、**変更前にテストが全パスする**ことを確認する
 - テストが存在しない or 不十分な場合は、先にテスト追加を提案する
 
 ### 2. リファクタリング計画
 
 - 改善すべき点を特定する:
-  - 命名の改善（CLAUDE.md の命名規則に準拠）
-  - 責務の分離（1ファイル1コンポーネント原則）
+  - 命名の改善（Swift 命名規則: PascalCase for types, camelCase for properties/methods）
+  - 責務の分離（1ファイル1View 原則）
   - 重複コードの排除
-  - セマンティックHTML への修正
-  - aria属性・キーボード操作の追加
-  - Tailwind CSS v4 への統一
-  - インポート順序の整理
-  - エラーハンドリングパターンの適用
+  - SwiftUI アクセシビリティ修飾子の追加・改善（`.accessibilityLabel()`, `.accessibilityHint()` 等）
+  - SwiftUI modifier の整理・統一
+  - import 順序の整理（Foundation, SwiftUI, SwiftData, then project modules）
+  - エラーハンドリングパターンの適用（do-catch, Result 型）
 - 変更の影響範囲を把握する
 
 ### 3. 段階的なリファクタリング
 
 - **小さな変更を1つずつ適用する**（一度に大量の変更をしない）
-- 各変更後に `npm run test` を実行してテストがパスすることを確認
+- 各変更後に `swift test` を実行してテストがパスすることを確認
 - テストが壊れたら**即座に変更を取り消す**（`git checkout` で該当ファイルを復元）
 - 壊れた場合は原因を分析し、別のアプローチを試みる
 
 ### 4. 最終検証
 
-- `npm run test` で全テストパスを確認
-- `npm run lint` でリント通過を確認
+- `swift test` で全テストパスを確認
+- `swift build` でコンパイル通過（警告なし）を確認
 - 変更前後の機能が同一であることを確認
 
 ### 5. 報告
@@ -64,5 +63,5 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 - テスト追加完了後にリファクタリングを再開する
 
 リファクタリング完了後:
-- **a11y-auditor** — HTMLセマンティクスを変更した場合、監査を推奨
+- **a11y-auditor** — アクセシビリティ修飾子を変更した場合、監査を推奨
 - **check-specs** スキル — 大きなリファクタリングの場合、仕様適合チェックを推奨
