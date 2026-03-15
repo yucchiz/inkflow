@@ -41,6 +41,7 @@ allowed-tools:
 
    ### セキュリティ
    - force unwrap（`!`）の不適切な使用
+   - `try!` や `fatalError` の不適切な使用（テスト・Preview 以外での使用）
    - シークレットのハードコード
    - 安全でない `Any` キャスト（`as!` の濫用）
 

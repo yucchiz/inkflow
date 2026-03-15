@@ -42,9 +42,11 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 ### アプリ構成
 
 ```
-@main App > ModelContainer > ThemeManager (@Environment) > NavigationStack > Views
+@main App > ModelContainer > ThemeManager + ToastManager + DocumentListViewModel (@Environment) > ContentView > NavigationStack > Views
 ```
 
+- `InkFlowApp` が `ModelContainer` を生成し、`SwiftDataRepository(modelContext:)` を ViewModel に注入
+- `ThemeManager`, `ToastManager`, `DocumentListViewModel` は `.environment()` で全 View に伝播
 - ルート: `DocumentListView` → `EditorView`（NavigationStack + navigationDestination）
 
 ### 主要モジュール
@@ -57,9 +59,9 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 | ルートView | `Sources/InkFlowKit/Views/ContentView/` | NavigationStack ルート |
 | 一覧画面 | `Sources/InkFlowKit/Views/DocumentList/` | DocumentListView, DocumentCardView（スワイプ削除）, EmptyStateView, FABButton |
 | エディタ | `Sources/InkFlowKit/Views/Editor/` | EditorView, TitleInputView, BodyTextEditor, StatusBarView, EditorHeaderView, EditorMenuView |
-| 共通UI | `Sources/InkFlowKit/Views/Common/` | ToastView, ConfirmDialog, ThemeToggleButton, HeaderView |
-| テーマ | `Sources/InkFlowKit/Theme/` | ColorTokens（ネイビー基調9色 x ライト/ダーク）, Typography, ThemeManager（@Observable + @AppStorage） |
-| ユーティリティ | `Sources/InkFlowKit/Utilities/` | DateFormatter+InkFlow（今日→HH:MM / 昨日→「昨日」/ 今年→M月D日）, ExportHelper（UIPasteboard + ShareLink）, Constants |
+| 共通UI | `Sources/InkFlowKit/Views/Common/` | ToastView + ToastManager（3秒自動消滅）, ConfirmDialog（.alert ViewModifier）, ThemeToggleButton, HeaderView |
+| テーマ | `Sources/InkFlowKit/Theme/` | ColorTokens（ネイビー基調9色 x ライト/ダーク）, Typography, ThemeManager（@Observable + UserDefaults） |
+| ユーティリティ | `Sources/InkFlowKit/Utilities/` | DateFormatter+InkFlow（今日→HH:MM / 昨日→「昨日」/ 今年→M月D日）, ExportHelper（UIPasteboard / NSPasteboard）, Constants |
 | テスト | `Tests/InkFlowKitTests/` | Models/, Data/, ViewModels/, Utilities/ のユニットテスト |
 
 ### 並行性モデル
@@ -105,10 +107,10 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 
 ### 自動保存システム
 
-- title/body 変更のたびに 500ms の `Task.sleep` デバウンス
+- title/body の `didSet` で `scheduleSave()` を呼び出し。`isLoading` 中はスキップ（初期ロード時の誤保存防止）
+- 500ms の `Task.sleep` デバウンス。`saveTask?.cancel()` で前のタスクをキャンセル
 - タイマー発火で `repository.save()` → saveStatus: idle → saving → saved（2秒後に idle）
-- `saveTask?.cancel()` で前のタスクをキャンセル
-- 画面離脱時に pending があれば即座にフラッシュ保存
+- `onDisappear()` で title+body が空白のみなら自動削除、内容があればフラッシュ保存
 
 ### SF Symbols マッピング
 
@@ -160,7 +162,7 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 
 ## テストパターン
 
-- **ViewModel テスト**: `@MainActor final class MockDocumentRepository` を注入（依存性注入）。Mock は spy パターン（`saveCallCount`, `lastRemovedId` 等）+ 個別エラーフラグ（`shouldThrowOnSave` 等）
+- **ViewModel テスト**: `@MainActor final class MockDocumentRepository` を注入（依存性注入）。Mock は spy パターン（`saveCallCount`, `lastRemovedId` 等）+ 個別エラーフラグ（`shouldThrowOnSave` 等）。Mock メソッドは同期 `throws`（protocol の `async throws` を満たす — Swift では同期関数が async 要件を充足可能）
 - **SwiftData 統合テスト**: in-memory `ModelConfiguration(isStoredInMemoryOnly: true)` で `ModelContainer` を生成し、テスト間の独立性を保証
 - **日時フォーマットテスト**: `inkFlowFormatted(now:)` で「現在時刻」を注入し、決定的にテスト
 - **非同期テスト**: `async` テスト関数 + `Task.sleep` でデバウンスを待機
@@ -171,7 +173,7 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 - **配信**: App Store + TestFlight
 - **CI/CD**: Xcode Cloud or GitHub Actions
 - **対象**: iOS 17.0+ / macOS 14.0+
-- **バンドルID**: `com.inkflow.app`（仮）
+- **バンドルID**: `com.inkflow.app`
 
 ## 設計上の禁止事項
 

@@ -18,7 +18,7 @@ globs: ['Sources/**/Models/**/*.swift', 'Sources/**/Data/**/*.swift', 'Sources/*
 - 外部状態管理ライブラリ（TCA, ReSwift 等）は使用しない
 - ViewModel は責務ごとに分離する（DocumentListViewModel, EditorViewModel）
 - View から `ModelContext` を直接操作しない — 必ず ViewModel 経由にする
-- テーマ等の軽量な設定値は `@AppStorage` を使用する
+- テーマ等の軽量な設定値は `@AppStorage` を使用する（`@Observable` クラス内では `@AppStorage` が使えないため、`UserDefaults` を直接操作する）
 
 ## エラーハンドリングのパターン
 
