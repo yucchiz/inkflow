@@ -38,3 +38,5 @@ dev-dist/
 
 # TypeScript
 *.tsbuildinfo
+.vercel
+.env*.local

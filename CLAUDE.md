@@ -76,6 +76,8 @@ StrictMode > BrowserRouter > DocumentProvider > ThemeProvider > ToastProvider > 
 1. `index.html` のインラインスクリプトが React 読み込み前に localStorage を同期読み取り → `.dark` クラスを `<html>` に適用（FOUC 防止）
 2. `ThemeContext` が `prefers-color-scheme` media query を監視し、system モード時に自動追従
 3. CSS 変数は `@theme` ディレクティブ（ライト）と `.dark` クラス（ダーク）で切り替え
+4. カラーパレットはネイビー基調（`--color-bg`, `--color-text` 等すべてネイビー系）
+5. `--color-danger` はテキスト用、`--color-danger-bg` はボタン背景用に分離（ダークモードでのWCAG AAコントラスト両立のため）
 
 ### PWA アーキテクチャ
 
@@ -106,7 +108,7 @@ StrictMode > BrowserRouter > DocumentProvider > ThemeProvider > ToastProvider > 
 | ------------------------- | ---------------------------------------------------------------------------------- |
 | `docs/PRD.md`             | 機能要件・画面仕様・データ仕様・アニメーション仕様                                 |
 | `docs/architecture.md`    | テックスタック・プロジェクト構造・設計判断・データモデル・パフォーマンス基準       |
-| `docs/design-language.md` | デザイン哲学「墨と余白」・カラーパレット・タイポグラフィ・アイコン・トーン＆マナー |
+| `docs/design-language.md` | デザイン哲学「墨と余白」・ネイビー基調カラーパレット・タイポグラフィ・アイコン・トーン＆マナー |
 
 ## 自動適用ルール（`.claude/rules/`）
 
@@ -142,6 +144,12 @@ StrictMode > BrowserRouter > DocumentProvider > ThemeProvider > ToastProvider > 
 - **Clipboard/Download テスト**: `navigator.clipboard.writeText`, `URL.createObjectURL/revokeObjectURL`, `HTMLAnchorElement.prototype.click` をモック化
 - **フォーカス管理テスト**: `MemoryRouter` の `initialEntries` に `{ pathname, key }` を渡し、`location.key` による初回/遷移判定を検証
 - **アニメーションテスト**: `button.dispatchEvent(new Event('animationend', { bubbles: true }))` を `act()` で囲んで発火。React の `onAnimationEnd` は jsdom で不安定なため native listener + dispatchEvent を使用
+
+## デプロイ
+
+- **ホスティング**: Vercel（Hobby プラン）
+- **自動デプロイ**: `main` ブランチへの push で自動トリガー
+- **設定**: `vercel.json`（SPA リライト + `outputDirectory: dist`）
 
 ## 設計上の禁止事項
 
