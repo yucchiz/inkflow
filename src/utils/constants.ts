@@ -1,0 +1,5 @@
+export const MAX_TITLE_LENGTH = 200
+export const AUTO_SAVE_DEBOUNCE_MS = 500
+export const SAVED_STATUS_DURATION_MS = 2000
+export const TOAST_DURATION_MS = 3000
+export const FOCUS_MODE_TOP_THRESHOLD = 60

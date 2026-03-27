@@ -6,81 +6,70 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-「書く。ただ、それだけを美しく。」— シンプルな執筆専用ネイティブアプリ（iOS/macOS）。
-プレーンテキストの執筆に特化し、美しいUIと心地よい書き味を提供する。
+「書く。ただ、それだけを美しく。」— シンプルな執筆専用 PWA。
+プレーンテキストの執筆に特化し、美しい UI と心地よい書き味を提供する。
 
 ## 開発コマンド
 
 ```bash
-swift build                              # ライブラリビルド（型チェック含む）
-swift test                               # ユニットテスト実行
-swift test --filter InkFlowKitTests      # テスト絞り込み
-xcodebuild -scheme InkFlow build         # アプリビルド（要 Xcode）
-xcodebuild -scheme InkFlow test          # UI テスト含む全テスト
+npm run dev       # 開発サーバー起動（Vite）
+npm run build     # プロダクションビルド（TypeScript チェック + Vite ビルド）
+npm test          # テスト実行（Vitest）
+npm run preview   # ビルド結果プレビュー
 ```
 
 ## 自動フック（`.claude/settings.json`）
 
-- **コミット前**: `swift build && swift test` が自動実行される。全て通らないとコミットできない
-- **`Sources/**/*.swift` 編集後**: `swift build` が自動実行され、コンパイルエラーがあれば即座にフィードバックされる
+- **コミット前**: `npm run build && npm test` が自動実行される。全て通らないとコミットできない
+- **`src/**/*.ts(x)` 編集後**: `npx tsc --noEmit` が自動実行され、型エラーがあれば即座にフィードバックされる
 
 ## アーキテクチャ
 
 ### テックスタック
 
-Swift 6 + SwiftUI + SwiftData + NavigationStack。状態管理は @Observable（外部ライブラリ不使用）。ストレージは SwiftData（ModelContainer）+ UserDefaults（テーマ設定）。アイコンは SF Symbols。SPM ライブラリ（InkFlowKit）+ Xcode プロジェクト（App/）のハイブリッド構成。`project.yml`（xcodegen）で Xcode プロジェクトを管理。
+React 19 + TypeScript + Vite + IndexedDB + PWA (Workbox)。状態管理はカスタム hooks + React Context（外部ライブラリ不使用）。ストレージは IndexedDB（idb ライブラリ）+ localStorage（テーマ設定）。アイコンは lucide-react。`base: '/inkflow/'` で GitHub Pages にデプロイ。
 
 ### データフロー
 
 ```
-UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @Observable 更新 → View 再描画
+UI操作 → hooks アクション → DocumentRepository (IndexedDB) → state 更新 → 再レンダリング
 ```
 
-- ViewModel のアクション関数が **Repository を先に呼び、成功後にプロパティを更新** する
-- エラー時は `print("[プレフィックス]", context)` で記録
+- hooks のアクション関数が **Repository を先に呼び、成功後に state を更新** する
+- エラー時は `console.error("[プレフィックス]", context)` で記録
 
 ### アプリ構成
 
 ```
-@main App > ModelContainer > ThemeManager + ToastManager + DocumentListViewModel (@Environment) > ContentView > NavigationStack > Views
+BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pages
 ```
 
-- `InkFlowApp` が `ModelContainer` を生成し、`SwiftDataRepository(modelContext:)` を ViewModel に注入
-- `ThemeManager`, `ToastManager`, `DocumentListViewModel` は `.environment()` で全 View に伝播
-- ルート: `DocumentListView` → `EditorView`（NavigationStack + navigationDestination）
+- `main.tsx` が `BrowserRouter` をルートに設定
+- `ThemeProvider`, `ToastProvider`, `RepositoryProvider` が Context で全コンポーネントに状態を伝播
+- ルート: `DocumentListPage` → `EditorPage`（React Router）
 
 ### 主要モジュール
 
 | レイヤー | 場所 | 役割 |
 |----------|------|------|
-| データモデル | `Sources/InkFlowKit/Models/` | `@Model InkDocument` — SwiftData モデル（id: UUID, title, body, createdAt, updatedAt） |
-| データ層 | `Sources/InkFlowKit/Data/` | `DocumentRepository` protocol + `SwiftDataRepository` 実装 + `DocumentFactory` |
-| ViewModel | `Sources/InkFlowKit/ViewModels/` | `@Observable` DocumentListViewModel, EditorViewModel（自動保存500msデバウンス含む）, SaveStatus（idle/saving/saved） |
-| ルートView | `Sources/InkFlowKit/Views/ContentView/` | NavigationStack ルート |
-| 一覧画面 | `Sources/InkFlowKit/Views/DocumentList/` | DocumentListView, DocumentCardView（スワイプ削除）, EmptyStateView, FABButton |
-| エディタ | `Sources/InkFlowKit/Views/Editor/` | EditorView, TitleInputView, BodyTextEditor, StatusBarView, EditorHeaderView, EditorMenuView |
-| 共通UI | `Sources/InkFlowKit/Views/Common/` | ToastView + ToastManager（3秒自動消滅）, ConfirmDialog（.alert ViewModifier）, ThemeToggleButton, HeaderView |
-| テーマ | `Sources/InkFlowKit/Theme/` | ColorTokens（ネイビー基調9色 x ライト/ダーク）, Typography, ThemeManager（@Observable + UserDefaults） |
-| ユーティリティ | `Sources/InkFlowKit/Utilities/` | DateFormatter+InkFlow（今日→HH:MM / 昨日→「昨日」/ 今年→M月D日）, ExportHelper（UIPasteboard / NSPasteboard）, Constants |
-| テスト | `Tests/InkFlowKitTests/` | Models/, Data/, ViewModels/, Utilities/ のユニットテスト |
-
-### 並行性モデル
-
-全レイヤーが `@MainActor` で統一されている:
-- `DocumentRepository` protocol — `@MainActor`
-- `SwiftDataRepository` — `@MainActor final class`（`ModelContext` を使用）
-- ViewModels — `@MainActor @Observable final class`
-- Views — SwiftUI View（暗黙的に MainActor）
-
-テストの `MockDocumentRepository` も `@MainActor final class`（`actor` ではない）。
+| データモデル | `src/models/` | `InkDocument` interface（id: string, title, body, createdAt, updatedAt） |
+| データ層 | `src/data/` | `DocumentRepository` interface + `IndexedDBRepository` 実装 + `DocumentFactory` |
+| hooks | `src/hooks/` | `useDocumentList`, `useEditor`（自動保存500msデバウンス含む）, `useTheme` |
+| Context | `src/contexts/` | `ThemeContext`, `ToastContext`, `RepositoryContext` |
+| 一覧画面 | `src/components/document-list/` | DocumentListPage, DocumentCard（スワイプ削除）, EmptyState, FABButton |
+| エディタ | `src/components/editor/` | EditorPage, TitleInput, BodyTextArea, StatusBar, EditorHeader, EditorMenu |
+| 共通UI | `src/components/common/` | Toast, ConfirmDialog, ThemeToggleButton, Header |
+| テーマ | `src/theme/` | CSS カスタムプロパティ（ネイビー基調9色 x ライト/ダーク）, tokens |
+| ユーティリティ | `src/utils/` | dateFormatter（今日→HH:MM / 昨日→「昨日」/ 今年→M月D日）, exportHelper（clipboard）, constants |
+| テスト | `src/__tests__/` | components/, data/, hooks/, utils/ のユニットテスト |
 
 ### テーマシステム
 
-1. `ThemeManager` が `UserDefaults.standard` でテーマモード（light/dark/system）を永続化（`@AppStorage` は `@Observable` 内で直接使えないため）
-2. `.preferredColorScheme(themeManager.resolvedColorScheme)` でアプリ全体に適用
-3. `resolvedColorScheme` が `nil`（system モード）の場合、OS の設定に自動追従
-4. カラーパレットはネイビー基調（`Color.InkFlow.bg(for: colorScheme)`, `Color.InkFlow.text(for: colorScheme)` 等すべてネイビー系。`@Environment(\.colorScheme)` で取得した値を渡す）
-5. `Color.InkFlow.danger` はテキスト用、`Color.InkFlow.dangerBg` はボタン背景用に分離（ダークモードでのコントラスト両立のため）
+1. `ThemeProvider` が `localStorage("inkflow:theme")` でテーマモード（light/dark/system）を永続化
+2. `<html data-theme="light|dark|system">` 属性で CSS カスタムプロパティを切替
+3. system モードの場合、`prefers-color-scheme` メディアクエリで OS 設定に自動追従
+4. カラーは CSS カスタムプロパティ `var(--inkflow-bg)`, `var(--inkflow-text)` 等で参照
+5. `--inkflow-danger` はテキスト用、`--inkflow-danger-bg` はボタン背景用に分離
 
 ### カラーパレット（ネイビー基調）
 
@@ -100,34 +89,34 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 
 ### 集中モード
 
-- `EditorViewModel` の `isFocusMode` / `showControls` で EditorHeaderView・StatusBarView の表示を制御
-- `.toolbar(.hidden)` + `.statusBarHidden()` でシステムUI非表示
-- 上端タップでコントロール復帰
-- `Escape` キー（macOS）で集中モード解除
+- `useEditor` hook の `isFocusMode` / `showControls` で EditorHeader・StatusBar の表示を制御
+- CSS で header/statusbar を非表示にし、エディタ領域を全画面に拡張
+- 上端クリック/タップでコントロール復帰
+- `Escape` キーで集中モード解除
 
 ### 自動保存システム
 
-- title/body の `didSet` で `scheduleSave()` を呼び出し。`isLoading` 中はスキップ（初期ロード時の誤保存防止）
-- 500ms の `Task.sleep` デバウンス。`saveTask?.cancel()` で前のタスクをキャンセル
+- title/body の変更で `scheduleSave()` を呼び出し。`isLoading` 中はスキップ（初期ロード時の誤保存防止）
+- 500ms の `setTimeout` デバウンス。`clearTimeout` で前のタイマーをキャンセル
 - タイマー発火で `repository.save()` → saveStatus: idle → saving → saved（2秒後に idle）
-- `onDisappear()` で title+body が空白のみなら自動削除、内容があればフラッシュ保存
+- ページ離脱時に title+body が空白のみなら自動削除、内容があればフラッシュ保存
 
-### SF Symbols マッピング
+### lucide-react アイコンマッピング
 
-| 用途 | SF Symbols 名 |
-|------|---------------|
-| 新規作成（FAB） | `plus` |
-| 削除 | `trash` |
-| 戻る | `chevron.left`（ナビ標準） |
-| メニュー | `ellipsis.circle` |
-| クリップボードコピー | `doc.on.doc` |
-| 共有 | `square.and.arrow.up` |
-| ライトテーマ | `sun.max` |
-| ダークテーマ | `moon` |
-| システムテーマ | `desktopcomputer` |
-| 集中モード開始 | `arrow.up.left.and.arrow.down.right` |
-| 集中モード解除 | `arrow.down.right.and.arrow.up.left` |
-| 空状態 | `pencil` |
+| 用途 | アイコン名 |
+|------|-----------|
+| 新規作成（FAB） | `Plus` |
+| 削除 | `Trash2` |
+| 戻る | `ChevronLeft` |
+| メニュー | `MoreHorizontal` |
+| クリップボードコピー | `Copy` |
+| 共有 | `Share` |
+| ライトテーマ | `Sun` |
+| ダークテーマ | `Moon` |
+| システムテーマ | `Monitor` |
+| 集中モード開始 | `Maximize2` |
+| 集中モード解除 | `Minimize2` |
+| 空状態 | `PenLine` |
 
 ## 仕様書
 
@@ -141,47 +130,48 @@ UI操作 → ViewModel アクション → DocumentRepository (SwiftData) → @O
 
 ファイル種別に応じて以下のルールが自動適用される:
 
-- `swiftui-views.md` — SwiftUI View 定義・アクセシビリティ・アニメーション規約
-- `testing.md` — Swift Testing のテスト設計・モック方針
-- `data-layer.md` — SwiftData 操作・@Observable 状態管理・エラーハンドリングパターン
+- `react-components.md` — React コンポーネント定義・アクセシビリティ・アニメーション規約
+- `testing.md` — Vitest + Testing Library のテスト設計・モック方針
+- `data-layer.md` — IndexedDB 操作・hooks 状態管理・エラーハンドリングパターン
 
 ## 命名規則
 
-- **View**: PascalCase（`DocumentCardView.swift`）
-- **ViewModel**: PascalCase + `ViewModel` サフィックス（`EditorViewModel.swift`）
-- **ユーティリティ**: extension の場合 `TypeName+Extension.swift`（`DateFormatter+InkFlow.swift`）
-- **型定義**: PascalCase、`struct` / `enum` 優先。`@Model class` は SwiftData モデルのみ
-- **プロパティ/メソッド**: camelCase
-- **定数**: camelCase（Swift 慣習に従う）。グローバル定数は `enum Constants` 内で `static let` として定義
+- **コンポーネント**: PascalCase（`DocumentCard.tsx`）
+- **ページ**: PascalCase + `Page` サフィックス（`EditorPage.tsx`）
+- **hooks**: camelCase + `use` プレフィックス（`useEditor.ts`）
+- **ユーティリティ**: camelCase（`dateFormatter.ts`）
+- **CSS**: コンポーネント名と同名（`DocumentCard.css`）
+- **型定義**: PascalCase（`interface InkDocument`）
+- **定数**: camelCase（`constants.ts` 内で `export const` として定義）
 
 ## import 順序
 
-1. Apple フレームワーク（`SwiftUI`, `SwiftData`, `Foundation` 等）
-2. 外部パッケージ（原則不使用）
-3. 内部モジュール
+1. React / React DOM
+2. サードパーティ（`react-router-dom`, `lucide-react`, `idb` 等）
+3. 内部モジュール（`@/` エイリアス使用）
 
 ## テストパターン
 
-- **ViewModel テスト**: `@MainActor final class MockDocumentRepository` を注入（依存性注入）。Mock は spy パターン（`saveCallCount`, `lastRemovedId` 等）+ 個別エラーフラグ（`shouldThrowOnSave` 等）。Mock メソッドは同期 `throws`（protocol の `async throws` を満たす — Swift では同期関数が async 要件を充足可能）
-- **SwiftData 統合テスト**: in-memory `ModelConfiguration(isStoredInMemoryOnly: true)` で `ModelContainer` を生成し、テスト間の独立性を保証
-- **日時フォーマットテスト**: `inkFlowFormatted(now:)` で「現在時刻」を注入し、決定的にテスト
-- **非同期テスト**: `async` テスト関数 + `Task.sleep` でデバウンスを待機
-- **Swift Testing フレームワーク**: `@Suite`, `@Test("日本語の説明")`, `#expect()`, `#require()` を使用（XCTest ではなく Swift Testing を優先）
+- **hooks テスト**: `renderHook` + `MockDocumentRepository` を注入（RepositoryContext 経由）。Mock は spy パターン（`saveCallCount`, `lastRemovedId` 等）+ 個別エラーフラグ（`shouldThrowOnSave` 等）
+- **IndexedDB 統合テスト**: `fake-indexeddb` でインメモリ IndexedDB を使用し、テスト間の独立性を保証
+- **日時フォーマットテスト**: `formatDate(date, now)` で「現在時刻」を注入し、決定的にテスト
+- **非同期テスト**: `vi.useFakeTimers()` + `vi.advanceTimersByTime()` でデバウンスを制御
+- **コンポーネントテスト**: `@testing-library/react` の `render` + `@testing-library/user-event` でユーザー操作をシミュレート
 
 ## デプロイ
 
-- **配信**: App Store + TestFlight
-- **CI/CD**: Xcode Cloud or GitHub Actions
-- **対象**: iOS 17.0+ / macOS 14.0+
-- **バンドルID**: `com.inkflow.app`
+- **ホスティング**: GitHub Pages
+- **CI/CD**: GitHub Actions（`.github/workflows/deploy.yml`）
+- **トリガー**: main ブランチへの push で自動デプロイ
+- **ベースパス**: `/inkflow/`
 
 ## 設計上の禁止事項
 
-- UIKit を直接使用しない — 特別な理由がない限り SwiftUI で完結する
-- force unwrap (`!`) を使わない — `guard let` / `if let` / nil coalescing (`??`) を使用する
-- `Any` / `AnyObject` 型を濫用しない — 具体的な型 or protocol を使用する
-- `width`/`height`/`top`/`left` 等のレイアウトプロパティを直接アニメーションしない — SwiftUI の `.animation()` + `.transition()` を使用する
-- 外部状態管理ライブラリ（TCA, Redux 等）を使わない
-- `@ObservedObject` / `@StateObject` は使わない — iOS 17+ の `@Observable` マクロを使用する
-- 外部パッケージは原則不使用 — Apple 標準フレームワークのみで構築する
-- `prefers-reduced-motion` に相当する `@Environment(\.accessibilityReduceMotion)` を無視しない — アニメーションは必ずアクセシビリティ設定を尊重する
+- クラスコンポーネントを使用しない — 関数コンポーネント + hooks のみ
+- 外部状態管理ライブラリ（Redux, Zustand, TCA 等）を使わない
+- インラインスタイルを使用しない — CSS カスタムプロパティ + CSS ファイルを使用する
+- `any` 型を濫用しない — 具体的な型 or interface を使用する
+- `!` (non-null assertion) を濫用しない — 適切な null チェックを行う
+- `prefers-reduced-motion` を無視しない — アニメーションは必ずアクセシビリティ設定を尊重する
+- コンポーネントから IndexedDB を直接操作しない — 必ず hooks/repository 経由
+- CSS でシステム標準カラーを直接使用しない — `var(--inkflow-*)` トークン経由にする

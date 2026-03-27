@@ -1,0 +1,82 @@
+.editor-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--inkflow-bg);
+  position: relative;
+}
+
+.editor-page__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.editor-page__top-tap-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 50;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.editor-page__error {
+  color: var(--inkflow-danger);
+  padding: 16px;
+}
+
+.editor-page__header {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.editor-page__header--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.editor-page__header--hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.editor-page__status {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.editor-page__status--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.editor-page__status--hidden {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+.editor-page--no-motion .editor-page__header,
+.editor-page--no-motion .editor-page__status {
+  transition: none;
+}
+
+.editor-page__content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.editor-page__content-inner {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 16px;
+}

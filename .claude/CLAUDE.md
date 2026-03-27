@@ -14,8 +14,8 @@ Claude Code の動作設定を管理するディレクトリ。
 ## ルート CLAUDE.md との分担
 
 - `/CLAUDE.md`: プロジェクト全体の方針（命名規則、禁止事項、リポジトリマップ）
-- `/docs/architecture.md`: 技術詳細（Swift 6・SwiftUI・SwiftData・SPM パッケージ構造・データモデル・パフォーマンス基準）
-- `rules/`: 特定ファイル種別向けの詳細規約（glob で自動適用、例: `swiftui-views.md`）
+- `/docs/architecture.md`: 技術詳細（React 19・TypeScript・Vite・IndexedDB・PWA 構成）
+- `rules/`: 特定ファイル種別向けの詳細規約（glob で自動適用、例: `react-components.md`）
 - rules/ の内容がルートと一部重複するのは意図的（自己完結性のため）
 
 ## エージェント連携パターン

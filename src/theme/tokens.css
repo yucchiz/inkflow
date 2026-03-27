@@ -1,0 +1,65 @@
+:root,
+[data-theme="light"] {
+  --inkflow-bg: #E8EDF5;
+  --inkflow-bg-sub: #F0F3F9;
+  --inkflow-text: #1A2340;
+  --inkflow-text-sub: #5C6785;
+  --inkflow-border: #C8D0E0;
+  --inkflow-accent: #1E40AF;
+  --inkflow-accent-hover: #1E3A8A;
+  --inkflow-danger: #B91C1C;
+  --inkflow-danger-bg: #B91C1C;
+}
+
+[data-theme="dark"] {
+  --inkflow-bg: #0C1525;
+  --inkflow-bg-sub: #162038;
+  --inkflow-text: #E2E8F4;
+  --inkflow-text-sub: #8A95B0;
+  --inkflow-border: #253050;
+  --inkflow-accent: #2D6CD6;
+  --inkflow-accent-hover: #3570D4;
+  --inkflow-danger: #F45252;
+  --inkflow-danger-bg: #DC2626;
+}
+
+/* System mode: light as default fallback */
+[data-theme="system"] {
+  --inkflow-bg: #E8EDF5;
+  --inkflow-bg-sub: #F0F3F9;
+  --inkflow-text: #1A2340;
+  --inkflow-text-sub: #5C6785;
+  --inkflow-border: #C8D0E0;
+  --inkflow-accent: #1E40AF;
+  --inkflow-accent-hover: #1E3A8A;
+  --inkflow-danger: #B91C1C;
+  --inkflow-danger-bg: #B91C1C;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] {
+    --inkflow-bg: #E8EDF5;
+    --inkflow-bg-sub: #F0F3F9;
+    --inkflow-text: #1A2340;
+    --inkflow-text-sub: #5C6785;
+    --inkflow-border: #C8D0E0;
+    --inkflow-accent: #1E40AF;
+    --inkflow-accent-hover: #1E3A8A;
+    --inkflow-danger: #B91C1C;
+    --inkflow-danger-bg: #B91C1C;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --inkflow-bg: #0C1525;
+    --inkflow-bg-sub: #162038;
+    --inkflow-text: #E2E8F4;
+    --inkflow-text-sub: #8A95B0;
+    --inkflow-border: #253050;
+    --inkflow-accent: #2D6CD6;
+    --inkflow-accent-hover: #3570D4;
+    --inkflow-danger: #F45252;
+    --inkflow-danger-bg: #DC2626;
+  }
+}

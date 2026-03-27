@@ -1,0 +1,60 @@
+.document-list-page {
+  background: var(--inkflow-bg);
+  min-height: 100vh;
+}
+
+.document-list-page__content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+.document-list-page__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--inkflow-text-sub);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.document-list-page__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 60vh;
+  color: var(--inkflow-text-sub);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.document-list-page__retry-button {
+  background: var(--inkflow-accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.document-list-page__retry-button:hover {
+  background: var(--inkflow-accent-hover);
+}
+
+.document-list-page__retry-button:focus-visible {
+  outline: 2px solid var(--inkflow-accent);
+  outline-offset: 2px;
+}
+
+.document-list-page__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.document-list-page__list > li {
+  list-style: none;
+}

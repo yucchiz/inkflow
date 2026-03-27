@@ -1,0 +1,92 @@
+.document-card-wrapper {
+  position: relative;
+  margin-bottom: 8px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.document-card-delete-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 80px;
+  background: var(--inkflow-danger-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 8px 8px 0;
+}
+
+.document-card-delete-button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.document-card-delete-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.document-card {
+  position: relative;
+  background: var(--inkflow-bg-sub);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: transform 150ms ease-out;
+  z-index: 1;
+}
+
+.document-card:hover {
+  filter: brightness(0.97);
+}
+
+.document-card:focus-visible {
+  outline: 2px solid var(--inkflow-accent);
+  outline-offset: 2px;
+}
+
+.document-card__title {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--inkflow-text);
+  margin: 0 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.document-card__body {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--inkflow-text-sub);
+  margin: 0 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+
+.document-card__date {
+  display: block;
+  text-align: right;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.75rem;
+  color: var(--inkflow-text-sub);
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .document-card {
+    transition: none;
+  }
+}

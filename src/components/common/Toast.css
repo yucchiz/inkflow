@@ -1,0 +1,39 @@
+.toast-overlay {
+  position: fixed;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.toast {
+  background: var(--inkflow-text);
+  color: var(--inkflow-bg);
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-family: system-ui, -apple-system, sans-serif;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out;
+  pointer-events: auto;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast--reduce-motion {
+  transform: none;
+  transition: opacity 200ms ease-out;
+}
+
+.toast--reduce-motion.toast--visible {
+  transform: none;
+}

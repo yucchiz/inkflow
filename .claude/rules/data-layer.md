@@ -1,35 +1,21 @@
 ---
-globs: ['Sources/**/Models/**/*.swift', 'Sources/**/Data/**/*.swift', 'Sources/**/ViewModels/**/*.swift']
+globs: ['src/data/**/*.ts', 'src/hooks/**/*.ts', 'src/hooks/**/*.tsx', 'src/models/**/*.ts', 'src/contexts/**/*.tsx']
 ---
 
 # データ層・状態管理規約
 
-## SwiftData 操作
-
-- モデルは `@Model` マクロで定義する
-- CRUD 操作は `ModelContext` 経由で行う（`insert`, `delete`, `fetch`, `save`）
-- 全ての SwiftData 操作は必ず do-catch でラップする
-- エラー時は `print("[プレフィックス]", context)` でコンテキスト情報付きのログを出力する
+## IndexedDB 操作
+- `idb` ライブラリ経由で操作する
+- CRUD 操作は `DocumentRepository` インターフェース経由で行う
+- エラー時は try-catch + console.error でコンテキスト付きログ出力
 - ユーザー向けエラーはトースト通知で表示する
 
 ## 状態管理
+- カスタム hooks で状態を管理する（useState + useEffect）
+- 外部状態管理ライブラリ（Redux, Zustand 等）は使用しない
+- グローバル状態は React Context で提供する（ThemeContext, ToastContext, RepositoryContext）
+- コンポーネントから IndexedDB を直接操作しない — 必ず hooks 経由
 
-- ViewModel は `@Observable` マクロで定義する
-- 外部状態管理ライブラリ（TCA, ReSwift 等）は使用しない
-- ViewModel は責務ごとに分離する（DocumentListViewModel, EditorViewModel）
-- View から `ModelContext` を直接操作しない — 必ず ViewModel 経由にする
-- テーマ等の軽量な設定値は `@AppStorage` を使用する（`@Observable` クラス内では `@AppStorage` が使えないため、`UserDefaults` を直接操作する）
-
-## エラーハンドリングのパターン
-
-```swift
-func saveDocument(_ document: InkDocument) async {
-    do {
-        modelContext.insert(document)
-        try modelContext.save()
-    } catch {
-        print("[SwiftDataRepository] ドキュメント保存に失敗:", document.id, error)
-        // トースト通知でユーザーに通知
-    }
-}
-```
+## 永続化
+- ドキュメントデータ: IndexedDB (`inkflow-db`)
+- テーマ設定: `localStorage("inkflow:theme")`

@@ -1,0 +1,10 @@
+.theme-toggle-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--inkflow-text);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
