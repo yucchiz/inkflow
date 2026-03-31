@@ -1,65 +1,114 @@
+/* =============================================
+   Digital Atelier — Design Tokens
+   Cool neutral palette + Indigo accent
+   ============================================= */
+
 :root,
 [data-theme="light"] {
-  --inkflow-bg: #E8EDF5;
-  --inkflow-bg-sub: #F0F3F9;
-  --inkflow-text: #1A2340;
-  --inkflow-text-sub: #5C6785;
-  --inkflow-border: #C8D0E0;
-  --inkflow-accent: #1E40AF;
-  --inkflow-accent-hover: #1E3A8A;
-  --inkflow-danger: #B91C1C;
-  --inkflow-danger-bg: #B91C1C;
+  /* Colors */
+  --inkflow-bg: #FAFAFA;
+  --inkflow-bg-sub: #F2F2F0;
+  --inkflow-text: #1C1C1E;
+  --inkflow-text-sub: #8E8E93;
+  --inkflow-border: #E5E5EA;
+  --inkflow-accent: #5856D6;
+  --inkflow-accent-hover: #4A48C4;
+  --inkflow-danger: #FF3B30;
+  --inkflow-danger-bg: #FF3B30;
+
+  /* Elevation (shadows) */
+  --inkflow-shadow-1: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --inkflow-shadow-2: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
+  --inkflow-shadow-3: 0 12px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
+
+  /* Glassmorphism */
+  --inkflow-glass-bg: rgba(255, 255, 255, 0.78);
+  --inkflow-glass-border: rgba(0, 0, 0, 0.06);
+
+  /* Accent shadow (for FAB) */
+  --inkflow-accent-shadow: 0 4px 14px rgba(88, 86, 214, 0.35);
 }
 
 [data-theme="dark"] {
-  --inkflow-bg: #0C1525;
-  --inkflow-bg-sub: #162038;
-  --inkflow-text: #E2E8F4;
-  --inkflow-text-sub: #8A95B0;
-  --inkflow-border: #253050;
-  --inkflow-accent: #2D6CD6;
-  --inkflow-accent-hover: #3570D4;
-  --inkflow-danger: #F45252;
-  --inkflow-danger-bg: #DC2626;
+  /* Colors */
+  --inkflow-bg: #161618;
+  --inkflow-bg-sub: #1C1C1E;
+  --inkflow-text: #E5E5E7;
+  --inkflow-text-sub: #8E8E93;
+  --inkflow-border: #38383A;
+  --inkflow-accent: #7B79E8;
+  --inkflow-accent-hover: #9594F0;
+  --inkflow-danger: #FF453A;
+  --inkflow-danger-bg: #FF453A;
+
+  /* Elevation (shadows) */
+  --inkflow-shadow-1: 0 1px 3px rgba(0,0,0,0.20), 0 1px 2px rgba(0,0,0,0.12);
+  --inkflow-shadow-2: 0 4px 12px rgba(0,0,0,0.28), 0 2px 4px rgba(0,0,0,0.16);
+  --inkflow-shadow-3: 0 12px 32px rgba(0,0,0,0.36), 0 4px 8px rgba(0,0,0,0.20);
+
+  /* Glassmorphism */
+  --inkflow-glass-bg: rgba(44, 44, 46, 0.78);
+  --inkflow-glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Accent shadow (for FAB) */
+  --inkflow-accent-shadow: 0 4px 14px rgba(123, 121, 232, 0.30);
 }
 
 /* System mode: light as default fallback */
 [data-theme="system"] {
-  --inkflow-bg: #E8EDF5;
-  --inkflow-bg-sub: #F0F3F9;
-  --inkflow-text: #1A2340;
-  --inkflow-text-sub: #5C6785;
-  --inkflow-border: #C8D0E0;
-  --inkflow-accent: #1E40AF;
-  --inkflow-accent-hover: #1E3A8A;
-  --inkflow-danger: #B91C1C;
-  --inkflow-danger-bg: #B91C1C;
+  --inkflow-bg: #FAFAFA;
+  --inkflow-bg-sub: #F2F2F0;
+  --inkflow-text: #1C1C1E;
+  --inkflow-text-sub: #8E8E93;
+  --inkflow-border: #E5E5EA;
+  --inkflow-accent: #5856D6;
+  --inkflow-accent-hover: #4A48C4;
+  --inkflow-danger: #FF3B30;
+  --inkflow-danger-bg: #FF3B30;
+  --inkflow-shadow-1: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --inkflow-shadow-2: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
+  --inkflow-shadow-3: 0 12px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
+  --inkflow-glass-bg: rgba(255, 255, 255, 0.78);
+  --inkflow-glass-border: rgba(0, 0, 0, 0.06);
+  --inkflow-accent-shadow: 0 4px 14px rgba(88, 86, 214, 0.35);
 }
 
 @media (prefers-color-scheme: light) {
   [data-theme="system"] {
-    --inkflow-bg: #E8EDF5;
-    --inkflow-bg-sub: #F0F3F9;
-    --inkflow-text: #1A2340;
-    --inkflow-text-sub: #5C6785;
-    --inkflow-border: #C8D0E0;
-    --inkflow-accent: #1E40AF;
-    --inkflow-accent-hover: #1E3A8A;
-    --inkflow-danger: #B91C1C;
-    --inkflow-danger-bg: #B91C1C;
+    --inkflow-bg: #FAFAFA;
+    --inkflow-bg-sub: #F2F2F0;
+    --inkflow-text: #1C1C1E;
+    --inkflow-text-sub: #8E8E93;
+    --inkflow-border: #E5E5EA;
+    --inkflow-accent: #5856D6;
+    --inkflow-accent-hover: #4A48C4;
+    --inkflow-danger: #FF3B30;
+    --inkflow-danger-bg: #FF3B30;
+    --inkflow-shadow-1: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    --inkflow-shadow-2: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
+    --inkflow-shadow-3: 0 12px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
+    --inkflow-glass-bg: rgba(255, 255, 255, 0.78);
+    --inkflow-glass-border: rgba(0, 0, 0, 0.06);
+    --inkflow-accent-shadow: 0 4px 14px rgba(88, 86, 214, 0.35);
   }
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="system"] {
-    --inkflow-bg: #0C1525;
-    --inkflow-bg-sub: #162038;
-    --inkflow-text: #E2E8F4;
-    --inkflow-text-sub: #8A95B0;
-    --inkflow-border: #253050;
-    --inkflow-accent: #2D6CD6;
-    --inkflow-accent-hover: #3570D4;
-    --inkflow-danger: #F45252;
-    --inkflow-danger-bg: #DC2626;
+    --inkflow-bg: #161618;
+    --inkflow-bg-sub: #1C1C1E;
+    --inkflow-text: #E5E5E7;
+    --inkflow-text-sub: #8E8E93;
+    --inkflow-border: #38383A;
+    --inkflow-accent: #7B79E8;
+    --inkflow-accent-hover: #9594F0;
+    --inkflow-danger: #FF453A;
+    --inkflow-danger-bg: #FF453A;
+    --inkflow-shadow-1: 0 1px 3px rgba(0,0,0,0.20), 0 1px 2px rgba(0,0,0,0.12);
+    --inkflow-shadow-2: 0 4px 12px rgba(0,0,0,0.28), 0 2px 4px rgba(0,0,0,0.16);
+    --inkflow-shadow-3: 0 12px 32px rgba(0,0,0,0.36), 0 4px 8px rgba(0,0,0,0.20);
+    --inkflow-glass-bg: rgba(44, 44, 46, 0.78);
+    --inkflow-glass-border: rgba(255, 255, 255, 0.08);
+    --inkflow-accent-shadow: 0 4px 14px rgba(123, 121, 232, 0.30);
   }
 }

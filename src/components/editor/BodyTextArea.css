@@ -1,6 +1,6 @@
 .body-textarea {
   font-family: 'Noto Serif JP', serif;
-  letter-spacing: 0.32px;
+  letter-spacing: 0.04em;
   color: var(--inkflow-text);
   background: transparent;
   border: none;
@@ -10,13 +10,14 @@
   flex-grow: 1;
   min-height: 200px;
   padding: 0 16px;
-  font-size: 1rem;
-  line-height: 1.8;
+  font-size: 1.0625rem;
+  line-height: 1.9;
   field-sizing: content;
 }
 
 @media (min-width: 768px) {
   .body-textarea {
+    font-size: 1.125rem;
     line-height: 2.0;
   }
 }

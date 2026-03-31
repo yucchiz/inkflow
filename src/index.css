@@ -15,7 +15,7 @@ body {
   height: 100%;
   background-color: var(--inkflow-bg);
   color: var(--inkflow-text);
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', 'Segoe UI', sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -74,11 +74,11 @@ textarea:focus {
 
 /* Smooth transitions for theme switching */
 body {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.35s cubic-bezier(0.25, 0.1, 0.25, 1.0), color 0.35s cubic-bezier(0.25, 0.1, 0.25, 1.0);
 }
 
 /* Selection color */
 ::selection {
-  background-color: var(--inkflow-accent);
-  color: white;
+  background-color: rgba(88, 86, 214, 0.25);
+  color: inherit;
 }

@@ -1,8 +1,8 @@
 .title-input {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: 0.64px;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
   color: var(--inkflow-text);
   background: transparent;
   border: none;

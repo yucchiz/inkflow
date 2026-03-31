@@ -8,17 +8,17 @@
 }
 
 .empty-state__icon {
-  color: var(--inkflow-text-sub);
+  color: var(--inkflow-border);
 }
 
 .empty-state__text {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   color: var(--inkflow-text-sub);
   margin: 0;
 }
 
 .empty-state__hint {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   font-size: 0.75rem;
   color: var(--inkflow-text-sub);
   margin: 0;

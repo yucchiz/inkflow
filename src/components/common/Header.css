@@ -6,9 +6,10 @@
 }
 
 .header__title {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 22px;
+  letter-spacing: 0.02em;
   color: var(--inkflow-text);
   margin: 0;
 }

@@ -1,10 +1,13 @@
 .confirm-dialog {
-  background: var(--inkflow-bg);
-  border: 1px solid var(--inkflow-border);
-  border-radius: 12px;
+  background: var(--inkflow-glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid var(--inkflow-glass-border);
+  border-radius: 16px;
   padding: 24px;
   max-width: 360px;
   width: calc(100% - 48px);
+  box-shadow: var(--inkflow-shadow-3);
 }
 
 .confirm-dialog::backdrop {
@@ -17,16 +20,16 @@
 }
 
 .confirm-dialog__title {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   font-weight: 700;
-  letter-spacing: 0.64px;
+  letter-spacing: 0.02em;
   color: var(--inkflow-text);
   margin: 0 0 8px;
   font-size: 1.125rem;
 }
 
 .confirm-dialog__message {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   color: var(--inkflow-text-sub);
   margin: 0 0 24px;
   line-height: 1.5;
@@ -42,8 +45,8 @@
   width: 100%;
   padding: 12px;
   border: none;
-  border-radius: 8px;
-  font-family: system-ui, -apple-system, sans-serif;
+  border-radius: 10px;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   font-size: 1rem;
   cursor: pointer;
   transition: opacity 150ms ease;
@@ -66,4 +69,5 @@
 
 .confirm-dialog__button--cancel:hover {
   background: var(--inkflow-bg-sub);
+  opacity: 1;
 }

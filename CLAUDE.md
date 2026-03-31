@@ -59,7 +59,7 @@ BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pa
 | 一覧画面 | `src/components/document-list/` | DocumentListPage, DocumentCard（スワイプ削除）, EmptyState, FABButton |
 | エディタ | `src/components/editor/` | EditorPage, TitleInput, BodyTextArea, StatusBar, EditorHeader, EditorMenu |
 | 共通UI | `src/components/common/` | Toast, ConfirmDialog, ThemeToggleButton, Header |
-| テーマ | `src/theme/` | CSS カスタムプロパティ（ネイビー基調9色 x ライト/ダーク）, tokens |
+| テーマ | `src/theme/` | CSS カスタムプロパティ（E-Ink / Paper基調9色 x ライト/ダーク）, tokens |
 | ユーティリティ | `src/utils/` | dateFormatter（今日→HH:MM / 昨日→「昨日」/ 今年→M月D日）, exportHelper（clipboard）, constants |
 | テスト | `src/__tests__/` | components/, data/, hooks/, utils/ のユニットテスト |
 
@@ -71,19 +71,24 @@ BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pa
 4. カラーは CSS カスタムプロパティ `var(--inkflow-bg)`, `var(--inkflow-text)` 等で参照
 5. `--inkflow-danger` はテキスト用、`--inkflow-danger-bg` はボタン背景用に分離
 
-### カラーパレット（ネイビー基調）
+### カラーパレット（Digital Atelier — クールニュートラル + インディゴアクセント）
 
 | 名称 | ライト | ダーク |
 |------|--------|--------|
-| bg | `#E8EDF5` | `#0C1525` |
-| bgSub | `#F0F3F9` | `#162038` |
-| text | `#1A2340` | `#E2E8F4` |
-| textSub | `#5C6785` | `#8A95B0` |
-| border | `#C8D0E0` | `#253050` |
-| accent | `#1E40AF` | `#2D6CD6` |
-| accentHover | `#1E3A8A` | `#3570D4` |
-| danger | `#B91C1C` | `#F45252` |
-| dangerBg | `#B91C1C` | `#DC2626` |
+| bg | `#FAFAFA` | `#161618` |
+| bgSub | `#F2F2F0` | `#1C1C1E` |
+| text | `#1C1C1E` | `#E5E5E7` |
+| textSub | `#8E8E93` | `#8E8E93` |
+| border | `#E5E5EA` | `#38383A` |
+| accent | `#5856D6` | `#7B79E8` |
+| accentHover | `#4A48C4` | `#9594F0` |
+| danger | `#FF3B30` | `#FF453A` |
+| dangerBg | `#FF3B30` | `#FF453A` |
+
+追加トークン:
+- `--inkflow-shadow-1/2/3`: 4段階 Elevation System
+- `--inkflow-glass-bg`, `--inkflow-glass-border`: Glassmorphism 用
+- `--inkflow-accent-shadow`: FAB の色付きシャドウ
 
 > 全テキスト・背景の組み合わせで WCAG AA コントラスト比 4.5:1 以上を保証すること。
 
@@ -124,7 +129,7 @@ BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pa
 |------------|------|
 | `docs/PRD.md` | 機能要件・画面仕様・データ仕様・アニメーション仕様 |
 | `docs/architecture.md` | テックスタック・プロジェクト構造・設計判断・データモデル・パフォーマンス基準 |
-| `docs/design-language.md` | デザイン哲学「墨と余白」・ネイビー基調カラーパレット・タイポグラフィ・アイコン・トーン＆マナー |
+| `docs/design-language.md` | デザイン哲学「墨と余白」・E-Ink / Paper基調カラーパレット・タイポグラフィ・アイコン・トーン＆マナー |
 
 ## 自動適用ルール（`.claude/rules/`）
 
