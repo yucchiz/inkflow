@@ -6,8 +6,10 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
+const base = process.env.VERCEL ? '/' : '/inkflow/'
+
 export default defineConfig({
-  base: '/inkflow/',
+  base,
   plugins: [
     react(),
     VitePWA({
@@ -20,8 +22,8 @@ export default defineConfig({
         theme_color: '#5856D6',
         background_color: '#5856D6',
         display: 'standalone',
-        scope: '/inkflow/',
-        start_url: '/inkflow/',
+        scope: base,
+        start_url: base,
         icons: [
           { src: 'icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
           { src: 'icons/icon.svg', sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },

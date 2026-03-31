@@ -14,7 +14,7 @@ const repository = new IndexedDBRepository()
 
 export default function App() {
   return (
-    <BrowserRouter basename="/inkflow">
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ThemeProvider>
         <ToastProvider>
           <RepositoryProvider repository={repository}>
