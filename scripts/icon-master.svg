@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- InkFlow — Modern Enso Icon (Master Source)
+     Geometric open circle (zen enso) + trailing ink drop
+     White on Indigo (#5856D6)
+     Design: Digital Atelier design system -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Background: washi paper tone (#F3F4F6) with rounded corners -->
-  <rect width="512" height="512" rx="24" fill="#F3F4F6"/>
+  <!-- Background: InkFlow Indigo -->
+  <rect width="512" height="512" fill="#5856D6"/>
 
-  <!-- === 「筆」character in calligraphic serif === -->
-  <text x="256" y="276"
-        font-family="'Hiragino Mincho ProN', 'YuMincho', 'Noto Serif CJK JP', serif"
-        font-size="320"
-        font-weight="600"
-        fill="#1F2937"
-        text-anchor="middle"
-        dominant-baseline="central">筆</text>
+  <!-- Enso: open circle arc with rounded ends
+       - radius 126, stroke 40 → visible at all sizes
+       - dasharray 680 112 → ~86% arc, ~14% gap
+       - rotate -30 → gap at top-right -->
+  <circle cx="256" cy="260" r="126"
+          fill="none"
+          stroke="#FFFFFF"
+          stroke-width="40"
+          stroke-linecap="round"
+          stroke-dasharray="680 112"
+          transform="rotate(-30, 256, 260)"/>
 
-  <!-- === Indigo ink drop accent (紺青墨滴) === -->
-  <!-- Brush tip drip: below the vertical stroke -->
-  <ellipse cx="256" cy="445" rx="7" ry="5.5"
-           transform="rotate(-15, 256, 445)" fill="#1E40AF"/>
+  <!-- Trailing ink drop: the next stroke about to begin -->
+  <circle cx="344" cy="168" r="12"
+          fill="#FFFFFF" opacity="0.6"/>
 </svg>

@@ -12,10 +12,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 開発コマンド
 
 ```bash
-npm run dev       # 開発サーバー起動（Vite）
-npm run build     # プロダクションビルド（TypeScript チェック + Vite ビルド）
-npm test          # テスト実行（Vitest）
-npm run preview   # ビルド結果プレビュー
+npm run dev              # 開発サーバー起動（Vite）
+npm run build            # プロダクションビルド（TypeScript チェック + Vite ビルド）
+npm test                 # テスト実行（Vitest、全テスト一括）
+npm run test:watch       # テストをウォッチモードで実行
+npm run test:coverage    # カバレッジ付きテスト実行
+npm run preview          # ビルド結果プレビュー
+
+# 単一テストファイルの実行
+npx vitest src/__tests__/hooks/useEditor.test.tsx
 ```
 
 ## 自動フック（`.claude/settings.json`）
@@ -27,7 +32,16 @@ npm run preview   # ビルド結果プレビュー
 
 ### テックスタック
 
-React 19 + TypeScript + Vite + IndexedDB + PWA (Workbox)。状態管理はカスタム hooks + React Context（外部ライブラリ不使用）。ストレージは IndexedDB（idb ライブラリ）+ localStorage（テーマ設定）。アイコンは lucide-react。`base: '/inkflow/'` で GitHub Pages にデプロイ。
+React 19 + TypeScript + Vite + IndexedDB + PWA (Workbox)。状態管理はカスタム hooks + React Context（外部ライブラリ不使用）。ストレージは IndexedDB（idb ライブラリ）+ localStorage（テーマ設定）。アイコンは lucide-react。
+
+### import エイリアス
+
+`@/` → `src/`（vite.config.ts + tsconfig.json で設定済み）
+
+```typescript
+import { useRepository } from '@/contexts/RepositoryContext'
+import type { InkDocument } from '@/models/InkDocument'
+```
 
 ### データフロー
 
@@ -36,31 +50,31 @@ UI操作 → hooks アクション → DocumentRepository (IndexedDB) → state 
 ```
 
 - hooks のアクション関数が **Repository を先に呼び、成功後に state を更新** する
+- Repository は `RepositoryContext` 経由で依存注入（テスト時は `MockDocumentRepository` に差替）
 - エラー時は `console.error("[プレフィックス]", context)` で記録
 
 ### アプリ構成
 
 ```
-BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pages
+BrowserRouter (basename="/inkflow") > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pages
 ```
 
 - `main.tsx` が `BrowserRouter` をルートに設定
-- `ThemeProvider`, `ToastProvider`, `RepositoryProvider` が Context で全コンポーネントに状態を伝播
-- ルート: `DocumentListPage` → `EditorPage`（React Router）
+- ルート: `/` → `DocumentListPage`、`/edit/:id` → `EditorPage`（React Router v7）
 
 ### 主要モジュール
 
 | レイヤー | 場所 | 役割 |
 |----------|------|------|
-| データモデル | `src/models/` | `InkDocument` interface（id: string, title, body, createdAt, updatedAt） |
+| データモデル | `src/models/` | `InkDocument` interface（id, title, body, createdAt, updatedAt） |
 | データ層 | `src/data/` | `DocumentRepository` interface + `IndexedDBRepository` 実装 + `DocumentFactory` |
-| hooks | `src/hooks/` | `useDocumentList`, `useEditor`（自動保存500msデバウンス含む）, `useTheme` |
+| hooks | `src/hooks/` | `useDocumentList`, `useEditor`（自動保存デバウンス含む）, `useTheme`, `useReduceMotion` |
 | Context | `src/contexts/` | `ThemeContext`, `ToastContext`, `RepositoryContext` |
 | 一覧画面 | `src/components/document-list/` | DocumentListPage, DocumentCard（スワイプ削除）, EmptyState, FABButton |
 | エディタ | `src/components/editor/` | EditorPage, TitleInput, BodyTextArea, StatusBar, EditorHeader, EditorMenu |
 | 共通UI | `src/components/common/` | Toast, ConfirmDialog, ThemeToggleButton, Header |
-| テーマ | `src/theme/` | CSS カスタムプロパティ（E-Ink / Paper基調9色 x ライト/ダーク）, tokens |
-| ユーティリティ | `src/utils/` | dateFormatter（今日→HH:MM / 昨日→「昨日」/ 今年→M月D日）, exportHelper（clipboard）, constants |
+| テーマ | `src/theme/` | tokens.css（カラー・影・Glassmorphism）, colors.ts, typography.ts |
+| ユーティリティ | `src/utils/` | dateFormatter, exportHelper（clipboard）, constants |
 | テスト | `src/__tests__/` | components/, data/, hooks/, utils/ のユニットテスト |
 
 ### テーマシステム
@@ -69,7 +83,6 @@ BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pa
 2. `<html data-theme="light|dark|system">` 属性で CSS カスタムプロパティを切替
 3. system モードの場合、`prefers-color-scheme` メディアクエリで OS 設定に自動追従
 4. カラーは CSS カスタムプロパティ `var(--inkflow-bg)`, `var(--inkflow-text)` 等で参照
-5. `--inkflow-danger` はテキスト用、`--inkflow-danger-bg` はボタン背景用に分離
 
 ### カラーパレット（Digital Atelier — クールニュートラル + インディゴアクセント）
 
@@ -85,26 +98,22 @@ BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pa
 | danger | `#FF3B30` | `#FF453A` |
 | dangerBg | `#FF3B30` | `#FF453A` |
 
-追加トークン:
-- `--inkflow-shadow-1/2/3`: 4段階 Elevation System
-- `--inkflow-glass-bg`, `--inkflow-glass-border`: Glassmorphism 用
-- `--inkflow-accent-shadow`: FAB の色付きシャドウ
+追加トークン: `--inkflow-shadow-1/2/3`（Elevation System）、`--inkflow-glass-bg/border`（Glassmorphism）、`--inkflow-accent-shadow`（FAB の色付きシャドウ）
 
 > 全テキスト・背景の組み合わせで WCAG AA コントラスト比 4.5:1 以上を保証すること。
+
+### 自動保存システム
+
+- title/body の変更で `scheduleSave()` を呼び出し。`isLoading` 中はスキップ（初期ロード時の誤保存防止）
+- 500ms（`AUTO_SAVE_DEBOUNCE_MS`）の `setTimeout` デバウンス。ref 経由で stale closure を回避
+- タイマー発火で `repository.save()` → saveStatus: idle → saving → saved（2秒後に idle）
+- **ページ離脱時**: title+body が空白のみなら自動削除、内容があればフラッシュ保存
 
 ### 集中モード
 
 - `useEditor` hook の `isFocusMode` / `showControls` で EditorHeader・StatusBar の表示を制御
 - CSS で header/statusbar を非表示にし、エディタ領域を全画面に拡張
-- 上端クリック/タップでコントロール復帰
-- `Escape` キーで集中モード解除
-
-### 自動保存システム
-
-- title/body の変更で `scheduleSave()` を呼び出し。`isLoading` 中はスキップ（初期ロード時の誤保存防止）
-- 500ms の `setTimeout` デバウンス。`clearTimeout` で前のタイマーをキャンセル
-- タイマー発火で `repository.save()` → saveStatus: idle → saving → saved（2秒後に idle）
-- ページ離脱時に title+body が空白のみなら自動削除、内容があればフラッシュ保存
+- 上端クリック/タップでコントロール復帰、`Escape` キーで解除
 
 ### lucide-react アイコンマッピング
 
@@ -129,7 +138,7 @@ BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pa
 |------------|------|
 | `docs/PRD.md` | 機能要件・画面仕様・データ仕様・アニメーション仕様 |
 | `docs/architecture.md` | テックスタック・プロジェクト構造・設計判断・データモデル・パフォーマンス基準 |
-| `docs/design-language.md` | デザイン哲学「墨と余白」・E-Ink / Paper基調カラーパレット・タイポグラフィ・アイコン・トーン＆マナー |
+| `docs/design-language.md` | デザイン哲学「Digital Atelier」・カラーパレット・タイポグラフィ・角丸・アニメーション仕様 |
 
 ## 自動適用ルール（`.claude/rules/`）
 
@@ -166,7 +175,7 @@ BrowserRouter > ThemeProvider > ToastProvider > RepositoryProvider > Routes > Pa
 ## デプロイ
 
 - **ホスティング**: GitHub Pages
-- **CI/CD**: GitHub Actions（`.github/workflows/deploy.yml`）
+- **CI/CD**: GitHub Actions（`.github/workflows/deploy.yml`）— Node 22、`dist/404.html` コピーで SPA 対応
 - **トリガー**: main ブランチへの push で自動デプロイ
 - **ベースパス**: `/inkflow/`
 
